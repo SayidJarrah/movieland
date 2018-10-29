@@ -24,6 +24,9 @@ public class MovieDaoImpl implements MovieDao {
     @Autowired
     private String getRandomMovies;
 
+    @Autowired
+    private String getMoviesByGenre;
+
     public List<Movie> getAllMovies() {
         logger.info("Start query to get all movies from DB");
         return jdbcTemplate.query(getAllMovies, new MovieResultSetExtractor());
@@ -32,6 +35,11 @@ public class MovieDaoImpl implements MovieDao {
     public List<Movie> getRandomMovies() {
         logger.info("Start query to get 3 random movies from DB");
         return jdbcTemplate.query(getRandomMovies, new MovieResultSetExtractor());
+    }
+
+    public List<Movie> getMoviesByGenre(int id) {
+        logger.info("Start query to get movies by genre");
+        return jdbcTemplate.query(getMoviesByGenre, new Object[]{id}, new MovieResultSetExtractor());
     }
 
 

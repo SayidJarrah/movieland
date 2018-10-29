@@ -18,8 +18,12 @@ public class MovieServiceImpl implements MovieService {
         return movieDao.getAllMovies();
     }
 
-    public List<Movie> getRandomMovies(){
+    public List<Movie> getRandomMovies() {
         return movieDao.getRandomMovies();
+    }
+
+    public List<Movie> getMoviesByGenre(int id) {
+        return movieDao.getMoviesByGenre(id);
     }
 
 

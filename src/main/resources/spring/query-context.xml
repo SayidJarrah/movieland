@@ -32,6 +32,20 @@
                                 LIMIT 3;"/>
     </bean>
 
+    <bean id="getMoviesByGenre" class="java.lang.String">
+        <constructor-arg value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
+                                       p.path poster, g.id genre_id, g.name genre, c.name country,
+                                       c.id country_id
+                                FROM   movie m, poster p, movie_has_genre mhg, genre g,
+                                       movie_has_country mhc, country c
+                                WHERE  m.poster_id=p.id
+                                AND    m.id=mhg.movie_id
+                                AND    mhg.genre_id=g.id
+                                AND    m.id=mhc.movie_id
+                                AND    mhc.country_id=c.id
+                                AND    g.id = ?"/>
+    </bean>
+
     <bean id="getAllGenres" class="java.lang.String">
         <constructor-arg value="SELECT id, name FROM genre;"/>
     </bean>
