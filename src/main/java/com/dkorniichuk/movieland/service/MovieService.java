@@ -9,4 +9,5 @@ public interface MovieService {
     List<Movie> getAllMovies();
     List<Movie> getRandomMovies();
     List<Movie> getMoviesByGenre(int genreId);
+    List<Movie> getAllMoviesSortedByRating(String rating);
 }
