@@ -2,6 +2,7 @@ package com.dkorniichuk.movieland.controller;
 
 import com.dkorniichuk.movieland.entity.Genre;
 import com.dkorniichuk.movieland.service.GenreService;
+import com.dkorniichuk.movieland.service.util.GenreCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,16 @@ public class GenreController {
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private GenreService genreService;
+    @Autowired
+    private GenreCache genreCache;
+
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<Genre> getAllGenres() {
         logger.info("Sending request to get all genres");
-        return genreService.getAllGenres();
+     //   GenreCache cache = GenreCache.getInstance();
+        return /*genreService.getAllGenres()*/ genreCache.getGenres();
     }
 
 }
