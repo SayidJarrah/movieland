@@ -1,10 +1,15 @@
 package com.dkorniichuk.movieland.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
 import java.util.List;
 import java.util.Set;
 
 public class Movie {
     private int id;
+    @JsonIgnore
     private String name;
     private int yearOfRelease;
     private String description;
@@ -13,6 +18,8 @@ public class Movie {
     private String picturePath;
     private Set<Country> countries;
     private Set<Genre> genres;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Set<Review> reviews;
 
     public int getId() {
         return id;
@@ -84,6 +91,14 @@ public class Movie {
 
     public void setGenres(Set<Genre> genres) {
         this.genres = genres;
+    }
+
+    public Set<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(Set<Review> reviews) {
+        this.reviews = reviews;
     }
 
     public String getRussianName() {
