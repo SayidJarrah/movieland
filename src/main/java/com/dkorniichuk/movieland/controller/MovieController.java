@@ -24,10 +24,10 @@ public class MovieController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<Movie> getAllMovies(@RequestParam(required = false) Map<String, String> requestParams) {
+    public List<Movie> getAllMovies(@RequestParam(required = false) Map<String, String> sortedParams) {
         logger.info("Sending request to get all movies");
-        logger.info(requestParams.toString());
-        return movieService.getAllMovies();
+        logger.info(sortedParams.toString());
+        return movieService.getAllMovies(sortedParams);
     }
 
     @RequestMapping(value = "/random", method = RequestMethod.GET)
@@ -39,9 +39,17 @@ public class MovieController {
 
     @RequestMapping(value = "/genre/{id}", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public List<Movie> getMoviesByGenre(@PathVariable int id) {
+    public List<Movie> getMoviesByGenre(@PathVariable int id,
+                                        @RequestParam(required = false) Map<String, String> sortedParams) {
         logger.info("Sending request to get movies by genre");
-        return movieService.getMoviesByGenre(id);
+        return movieService.getMoviesByGenre(id, sortedParams);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public Movie getMovieById(@PathVariable int id) {
+        logger.info("Sending request to get movies by id");
+        return movieService.getMovieById(id);
     }
 
 

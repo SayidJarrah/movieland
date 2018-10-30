@@ -3,11 +3,13 @@ package com.dkorniichuk.movieland.service.impl;
 import com.dkorniichuk.movieland.dao.MovieDao;
 import com.dkorniichuk.movieland.entity.Movie;
 import com.dkorniichuk.movieland.service.MovieService;
+import com.dkorniichuk.movieland.service.util.SortingHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -15,28 +17,24 @@ public class MovieServiceImpl implements MovieService {
     @Autowired
     private MovieDao movieDao;
 
-    public List<Movie> getAllMovies() {
-        return movieDao.getAllMovies();
+    @Override
+    public List<Movie> getAllMovies(Map<String, String> sortedParams) {
+        return sortedParams.isEmpty() ? movieDao.getAllMovies() : SortingHelper.sort(movieDao.getAllMovies(), sortedParams);
     }
 
+    @Override
     public List<Movie> getRandomMovies() {
         return movieDao.getRandomMovies();
     }
 
-    public List<Movie> getMoviesByGenre(int id) {
-        return movieDao.getMoviesByGenre(id);
+    @Override
+    public List<Movie> getMoviesByGenre(int id, Map<String, String> sortedParams) {
+        return sortedParams.isEmpty() ? movieDao.getMoviesByGenre(id) : SortingHelper.sort(movieDao.getMoviesByGenre(id), sortedParams);
     }
 
     @Override
-    public List<Movie> getAllMoviesSortedByRating(String rating) {
-        return "ASC".equalsIgnoreCase(rating) ? movieDao.getAllMovies().stream().sorted(
-                (movie1, movie2) ->
-                        new Double(movie1.getRating()).compareTo(movie2.getRating()))
-                .collect(Collectors.toList()) : movieDao.getAllMovies().stream().sorted(
-                (movie1, movie2) ->
-                        new Double(movie2.getRating()).compareTo(movie1.getRating()))
-                .collect(Collectors.toList());
+    public Movie getMovieById(int id) {
+        return movieDao.getMovieById(id);
     }
-
 
 }

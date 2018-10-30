@@ -27,19 +27,30 @@ public class MovieDaoImpl implements MovieDao {
     @Autowired
     private String getMoviesByGenre;
 
+    @Autowired
+    private String getMovieById;
+
+    @Override
     public List<Movie> getAllMovies() {
         logger.info("Start query to get all movies from DB");
         return jdbcTemplate.query(getAllMovies, new MovieResultSetExtractor());
     }
 
+    @Override
     public List<Movie> getRandomMovies() {
         logger.info("Start query to get 3 random movies from DB");
         return jdbcTemplate.query(getRandomMovies, new MovieResultSetExtractor());
     }
 
+    @Override
     public List<Movie> getMoviesByGenre(int id) {
         logger.info("Start query to get movies by genre");
         return jdbcTemplate.query(getMoviesByGenre, new Object[]{id}, new MovieResultSetExtractor());
+    }
+
+    @Override
+    public Movie getMovieById(int id) {
+        return jdbcTemplate.query(getMovieById, new Object[]{id}, new MovieResultSetExtractor()).get(0);
     }
 
 
