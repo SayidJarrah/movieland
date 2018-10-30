@@ -50,7 +50,9 @@ public class MovieDaoImpl implements MovieDao {
 
     @Override
     public Movie getMovieById(int id) {
-        return jdbcTemplate.query(getMovieById, new Object[]{id}, new MovieResultSetExtractor()).get(0);
+        logger.info("Start query to get movie by id");
+        List<Movie> result = jdbcTemplate.query(getMovieById, new Object[]{id}, new MovieResultSetExtractor());
+        return !result.isEmpty() ? result.get(0) : null;
     }
 
 

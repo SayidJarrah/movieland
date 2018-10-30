@@ -1,6 +1,8 @@
 package com.dkorniichuk.movieland.dao.mapper;
 
 import com.dkorniichuk.movieland.entity.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -10,7 +12,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class MovieResultSetExtractor implements ResultSetExtractor<List<Movie>> {
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     public List<Movie> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+        logger.info("Result set extracting started...");
         Map<Integer, Movie> map = new HashMap<Integer, Movie>();
 
         while (resultSet.next()) {
@@ -70,15 +75,17 @@ public class MovieResultSetExtractor implements ResultSetExtractor<List<Movie>> 
             reviews = new HashSet<>();
         }
         Review review = new Review();
-        review.setId(resultSet.getInt("review_id"));
-        review.setText(resultSet.getString("text"));
-        User user = new User();
-        user.setId(resultSet.getInt("user_id"));
-        user.setFirstName(resultSet.getString("first_name"));
-        user.setLastName(resultSet.getString("last_name"));
-        review.setUser(user);
-        reviews.add(review);
-        movie.setReviews(reviews);
+        if (resultSet.getInt("review_id") != 0) {
+            review.setId(resultSet.getInt("review_id"));
+            review.setText(resultSet.getString("text"));
+            User user = new User();
+            user.setId(resultSet.getInt("user_id"));
+            user.setFirstName(resultSet.getString("first_name"));
+            user.setLastName(resultSet.getString("last_name"));
+            review.setUser(user);
+            reviews.add(review);
+            movie.setReviews(reviews);
+        }
     }
 
     public static boolean doesColumnExists(String columnName, ResultSet resultSet) throws SQLException {

@@ -1,6 +1,7 @@
 package com.dkorniichuk.movieland.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class User {
     private int id;
@@ -8,11 +9,11 @@ public class User {
     private String firstName;
     @JsonIgnore
     private String lastName;
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
     @JsonIgnore
     private int userTypeId;
-    @JsonIgnore
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
 
     public int getId() {
