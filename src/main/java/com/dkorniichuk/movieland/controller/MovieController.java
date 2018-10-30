@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,9 +48,10 @@ public class MovieController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Movie getMovieById(@PathVariable int id) {
-        logger.info("Sending request to get movies by id");
-        return movieService.getMovieById(id);
+    public Movie getMovieById(@PathVariable int id,
+                              @RequestParam(required = false) String currency) throws IOException {
+        logger.info("Sending request to get movies by id. Currency: " + (currency == null ? "UAH" : currency));
+        return movieService.getMovieById(id, currency);
     }
 
 
