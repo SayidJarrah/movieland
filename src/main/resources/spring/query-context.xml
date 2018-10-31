@@ -73,6 +73,10 @@
                                 WHERE m.id=?"/>
     </bean>
 
+    <bean id="getUserByEmail" class="java.lang.String">
+        <constructor-arg value="SELECT * FROM user WHERE email = ?"/>
+    </bean>
+
     <bean id="nbuCurrencyRateURL" class="java.lang.String">
         <constructor-arg value="https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json&amp;valcode="/>
     </bean>
