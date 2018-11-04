@@ -63,6 +63,13 @@ public class AuthenticationTokenCache {
         remove(keyForRemove);
     }
 
+    public String getUserKeyByUUID(UUID uuid) {
+        return cache.entrySet().stream()
+                .filter(entry -> entry.getValue().getToken().getUuid() != uuid)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.joining());
+    }
+
 
     //TODO:
     public Object get(String key) {

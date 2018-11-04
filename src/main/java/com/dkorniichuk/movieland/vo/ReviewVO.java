@@ -1,10 +1,11 @@
-package com.dkorniichuk.movieland;
+package com.dkorniichuk.movieland.vo;
 
 import com.dkorniichuk.movieland.entity.Review;
 
 public class ReviewVO {
     public String text;
     public int movieId;
+    public int userId;
 
     public ReviewVO() {
     }
@@ -30,11 +31,20 @@ public class ReviewVO {
         this.movieId = movieId;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     @Override
     public String toString() {
         return "ReviewVO{" +
                 "text='" + text + '\'' +
                 ", movieId=" + movieId +
+                ", userId=" + userId +
                 '}';
     }
 }

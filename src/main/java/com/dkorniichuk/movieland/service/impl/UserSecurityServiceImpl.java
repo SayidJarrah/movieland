@@ -44,13 +44,19 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
         return authenticationToken;
 
-
     }
+
+
 
     @Override
     public void removeAuthenticationToken(UUID uuid) {
         logger.info("Start removing token uuid=" + uuid);
         cache.removeByUUID(uuid);
+    }
+
+    @Override
+    public User getUserByUUID(UUID uuid) {
+        return null;
     }
 
     private AuthenticationToken createAuthenticationToken(User user) {

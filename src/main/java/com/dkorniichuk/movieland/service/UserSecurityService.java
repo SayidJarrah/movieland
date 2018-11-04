@@ -12,5 +12,7 @@ public interface UserSecurityService {
 
     void removeAuthenticationToken(UUID uuid);
 
+    User getUserByUUID(UUID uuid);
+
 
 }
