@@ -1,9 +1,12 @@
 package com.dkorniichuk.movieland.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Review {
     private int id;
     private User user;
     private String text;
+    private Movie movie;
 
     public int getId() {
         return id;
@@ -29,6 +32,14 @@ public class Review {
         this.text = text;
     }
 
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,7 +49,8 @@ public class Review {
 
         if (id != review.id) return false;
         if (user != null ? !user.equals(review.user) : review.user != null) return false;
-        return text != null ? text.equals(review.text) : review.text == null;
+        if (text != null ? !text.equals(review.text) : review.text != null) return false;
+        return movie != null ? movie.equals(review.movie) : review.movie == null;
     }
 
     @Override
@@ -46,6 +58,7 @@ public class Review {
         int result = id;
         result = 31 * result + (user != null ? user.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
+        result = 31 * result + (movie != null ? movie.hashCode() : 0);
         return result;
     }
 
@@ -55,6 +68,7 @@ public class Review {
                 "id=" + id +
                 ", user=" + user +
                 ", text='" + text + '\'' +
+                ", movie=" + movie +
                 '}';
     }
 }

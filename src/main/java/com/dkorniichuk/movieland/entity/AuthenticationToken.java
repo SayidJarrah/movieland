@@ -1,16 +1,16 @@
 package com.dkorniichuk.movieland.entity;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class AuthenticationToken {
     private UUID uuid;
+    @JsonIgnore
+    private String email;
     private String nickname;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private LocalDateTime expireDate;
-
+    @JsonIgnore
+    private UserRole userRole;
 
     public UUID getUuid() {
         return uuid;
@@ -28,20 +28,29 @@ public class AuthenticationToken {
         this.nickname = nickname;
     }
 
-    public LocalDateTime getExpireDate() {
-        return expireDate;
+    public UserRole getUserRole() {
+        return userRole;
     }
 
-    public void setExpireDate(LocalDateTime expireDate) {
-        this.expireDate = expireDate;
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
     public String toString() {
-        return "Token{" +
-                "uuid='" + uuid + '\'' +
+        return "AuthenticationToken{" +
+                "uuid=" + uuid +
+                ", email='" + email + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", expireDate=" + expireDate +
+                ", userRole=" + userRole +
                 '}';
     }
 }

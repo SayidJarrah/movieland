@@ -3,7 +3,9 @@ package com.dkorniichuk.movieland.service.impl;
 import com.dkorniichuk.movieland.dao.UserDao;
 import com.dkorniichuk.movieland.entity.AuthenticationToken;
 import com.dkorniichuk.movieland.entity.User;
+import com.dkorniichuk.movieland.entity.UserRole;
 import com.dkorniichuk.movieland.service.UserSecurityService;
+import com.dkorniichuk.movieland.service.util.AuthenticationTokenCache;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,9 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private AuthenticationTokenCache cache;
+
 
     @Override
     public AuthenticationToken getAuthenticationToken(String userCredentials) throws IOException {
@@ -30,11 +35,11 @@ public class UserSecurityServiceImpl implements UserSecurityService {
         String passwordFromRequest = user.getPassword();
 
         User userFromDB = userDao.getUserByEmail(emailFromRequest);
-        //TODO: saveAuthenticationTokenToCache()
 
         AuthenticationToken authenticationToken = null;
         if (userFromDB != null && passwordFromRequest.equals(userFromDB.getPassword())) {
             authenticationToken = createAuthenticationToken(userFromDB);
+            saveAuthenticationTokenInCache(authenticationToken);
         }
 
         return authenticationToken;
@@ -42,11 +47,22 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
     }
 
+    @Override
+    public void removeAuthenticationToken(UUID uuid) {
+        logger.info("Start removing token uuid=" + uuid);
+        cache.removeByUUID(uuid);
+    }
+
     private AuthenticationToken createAuthenticationToken(User user) {
         AuthenticationToken authenticationToken = new AuthenticationToken();
         authenticationToken.setUuid(UUID.randomUUID());
+        authenticationToken.setEmail(user.getEmail());
         authenticationToken.setNickname(user.getNickname());
-        // authenticationToken.setExpireDate(LocalDateTime.now());
+        authenticationToken.setUserRole(UserRole.getByValue(user.getUserTypeId()));
         return authenticationToken;
+    }
+
+    private void saveAuthenticationTokenInCache(AuthenticationToken token) {
+        cache.add(token.getEmail(), token, 60000);
     }
 }

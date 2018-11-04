@@ -7,16 +7,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Controller
-@RequestMapping("/v1/login")
 public class UserSecurityController {
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -24,16 +23,24 @@ public class UserSecurityController {
     private UserSecurityService userSecurityService;
 
 
-    //TODO:
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/v1/login", method = RequestMethod.POST)
     @ResponseBody
-    public AuthenticationToken getAuthenticationToken(@RequestBody String userCredentials) throws IOException {
+    public ResponseEntity<AuthenticationToken> getAuthenticationToken(@RequestBody String userCredentials) throws IOException {
         logger.info("Sending request to get authentication token");
         System.out.println(userCredentials);
         AuthenticationToken authenticationToken = userSecurityService.getAuthenticationToken(userCredentials);
-        //TODO: if null send bad response
-        return authenticationToken;
-        /* https://www.baeldung.com/spring-security-authentication-provider*/
+        return authenticationToken != null
+                ? new ResponseEntity<>(authenticationToken, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+
+    @RequestMapping(value = "/v1/logout", method = RequestMethod.DELETE)
+    public ResponseEntity<HttpStatus> logout(@RequestHeader String uuid) {
+        logger.info("Sending request to log out");
+        userSecurityService.removeAuthenticationToken(UUID.fromString(uuid));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 }

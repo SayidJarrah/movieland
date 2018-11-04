@@ -27,8 +27,7 @@ public class GenreController {
     @ResponseBody
     public List<Genre> getAllGenres() {
         logger.info("Sending request to get all genres");
-     //   GenreCache cache = GenreCache.getInstance();
-        return /*genreService.getAllGenres()*/ genreCache.getGenres();
+        return genreCache.getGenres();
     }
 
 }
