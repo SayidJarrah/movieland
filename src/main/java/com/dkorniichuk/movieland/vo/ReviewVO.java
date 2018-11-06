@@ -1,6 +1,7 @@
 package com.dkorniichuk.movieland.vo;
 
 import com.dkorniichuk.movieland.entity.Review;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ReviewVO {
     public String text;

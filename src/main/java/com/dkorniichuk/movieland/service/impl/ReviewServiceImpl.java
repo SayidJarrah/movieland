@@ -32,7 +32,6 @@ public class ReviewServiceImpl implements ReviewService {
         //TODO: refactor this code!!!
         User user = userDao.getUserByEmail(userKey);
         review.setUserId(user.getId());
-        //TODO: troubles with constraints -review!!!
         reviewDao.addReview(review);
         System.out.println(user);
 

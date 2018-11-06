@@ -65,7 +65,7 @@ public class AuthenticationTokenCache {
 
     public String getUserKeyByUUID(UUID uuid) {
         return cache.entrySet().stream()
-                .filter(entry -> entry.getValue().getToken().getUuid() != uuid)
+                .filter(entry -> entry.getValue().getToken().getUuid().equals(uuid))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.joining());
     }

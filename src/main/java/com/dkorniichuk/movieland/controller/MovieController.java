@@ -6,6 +6,8 @@ import com.dkorniichuk.movieland.service.MovieService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,5 +55,20 @@ public class MovieController {
         return movieService.getMovieById(id, currency);
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<HttpStatus> addMovie(@RequestBody String movieData,
+                                               @RequestHeader String uuid) {
+        movieService.addMovie(movieData, uuid);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<HttpStatus> editMovie(@RequestBody String movieData,
+                                                @RequestHeader String uuid) {
+        movieService.editMovie(movieData, uuid);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }

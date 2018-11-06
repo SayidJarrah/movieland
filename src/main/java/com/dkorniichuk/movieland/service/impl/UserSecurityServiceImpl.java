@@ -47,13 +47,14 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     }
 
 
-
     @Override
     public void removeAuthenticationToken(UUID uuid) {
         logger.info("Start removing token uuid=" + uuid);
         cache.removeByUUID(uuid);
     }
 
+
+    //TODO: check why this method there
     @Override
     public User getUserByUUID(UUID uuid) {
         return null;
@@ -69,6 +70,6 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     }
 
     private void saveAuthenticationTokenInCache(AuthenticationToken token) {
-        cache.add(token.getEmail(), token, 60000);
+        cache.add(token.getEmail(), token, 300000);
     }
 }

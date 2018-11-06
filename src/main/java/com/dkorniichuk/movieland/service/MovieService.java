@@ -17,4 +17,8 @@ public interface MovieService {
 
     Movie getMovieById(int id, String currency) throws IOException;
 
+    void addMovie(String movieData, String uuid);
+
+    void editMovie(String moviedData, String uuid);
+
 }

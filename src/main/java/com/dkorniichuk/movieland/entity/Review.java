@@ -1,11 +1,13 @@
 package com.dkorniichuk.movieland.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Review {
     private int id;
     private User user;
     private String text;
+    @JsonIgnore
     private Movie movie;
 
     public int getId() {

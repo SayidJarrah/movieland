@@ -81,6 +81,10 @@
         <constructor-arg value="INSERT INTO review (user_id,movie_id,text) values (?,?,?);"/>
     </bean>
 
+    <bean id="getAllCountries" class="java.lang.String">
+        <constructor-arg value="SELECT * FROM country"/>
+    </bean>
+
     <bean id="nbuCurrencyRateURL" class="java.lang.String">
         <constructor-arg value="https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json&amp;valcode="/>
     </bean>

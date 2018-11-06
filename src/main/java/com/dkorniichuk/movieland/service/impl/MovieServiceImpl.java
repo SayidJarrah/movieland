@@ -43,4 +43,14 @@ public class MovieServiceImpl implements MovieService {
         return currency == null ? movieDao.getMovieById(id) : converter.convertPrice(movieDao.getMovieById(id), currency);
     }
 
+    @Override
+    public void addMovie(String movieData, String uuid) {
+
+    }
+
+    @Override
+    public void editMovie(String moviedData, String uuid) {
+
+    }
+
 }
