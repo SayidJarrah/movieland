@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
+
+import static java.util.Optional.ofNullable;
 
 @Service
 public class UserSecurityServiceImpl implements UserSecurityService {
@@ -54,10 +57,11 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     }
 
 
-    //TODO: check why this method there
+
     @Override
     public User getUserByUUID(UUID uuid) {
-        return null;
+        String email = cache.getUserKeyByUUID(uuid);
+        return userDao.getUserByEmail(email);
     }
 
     private AuthenticationToken createAuthenticationToken(User user) {
