@@ -1,5 +1,6 @@
 package com.dkorniichuk.movieland.interceptor;
 
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -9,14 +10,19 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+    private String excludedUrl;
 
-    protected TokenAuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
-        super(requiresAuthenticationRequestMatcher);
+    protected TokenAuthenticationFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager, String excludedUrl) {
+        super(defaultFilterProcessesUrl);
+        this.excludedUrl = excludedUrl;
+        setAuthenticationManager(authenticationManager);
     }
 
     @Override
@@ -37,5 +43,14 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
             final Authentication authResult) throws IOException, ServletException {
         super.successfulAuthentication(request, response, chain, authResult);
         chain.doFilter(request, response);
+    }
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        if (((HttpServletRequest) req).getRequestURI().endsWith(excludedUrl)) {
+            chain.doFilter(req, res);
+        } else {
+            super.doFilter(req, res, chain);
+        }
     }
 }

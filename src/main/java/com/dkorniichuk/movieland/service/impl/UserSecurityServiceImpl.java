@@ -51,7 +51,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
 
     @Override
-    public void removeAuthenticationToken(UUID uuid) {
+    public void logout(UUID uuid) {
         logger.info("Start removing token uuid=" + uuid);
         cache.removeByUUID(uuid);
     }
@@ -59,7 +59,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
 
     @Override
-    public User getUserByUUID(UUID uuid) {
+    public User findUserByTokenUuid(UUID uuid) {
         String email = cache.getUserKeyByUUID(uuid);
         return userDao.getUserByEmail(email);
     }

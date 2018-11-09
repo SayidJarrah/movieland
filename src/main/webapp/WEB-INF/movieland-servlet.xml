@@ -20,11 +20,11 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <mvc:interceptors>
+  <!--  <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/v1/**"/>
             <mvc:exclude-mapping path="/v1/login"/>
             <bean class="com.dkorniichuk.movieland.interceptor.AuthenticationInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 </beans>

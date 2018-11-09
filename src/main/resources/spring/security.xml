@@ -4,21 +4,33 @@
          xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <http />
+    <http auto-config="true" use-expressions="true">
+        <intercept-url pattern="/v1/login" access="permitAll()"/>
+        <!--<intercept-url pattern="/v1/review" access="isAuthenticated()"/>-->
+        <custom-filter after="BASIC_AUTH_FILTER" ref="tokenAuthenticationFilter" />
+        <csrf disabled="true"/>
+    </http>
 
-    <authentication-manager >
-        <authentication-provider>
-            <user-service>
 
-            </user-service>
-        </authentication-provider>
+    <authentication-manager id="authenticationManager">
         <authentication-provider ref="tokenAuthenticationProvider"/>
     </authentication-manager>
 
+    <!--    <b:bean id="tokenAuthenticationProvider"
+               class="com.dkorniichuk.movieland.interceptor.CustomAuthenticationProvider">
+       </b:bean>-->
 
+    <b:bean id="tokenAuthenticationProvider"
+            class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationProvider">
+    </b:bean>
 
-      <!--  <intercept-url pattern="/login" access="permitAll()" /> -->
+     <b:bean id="tokenAuthenticationFilter"
+             class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationFilter">
+         <b:constructor-arg name="defaultFilterProcessesUrl" value="/v1/**"/>
+         <b:constructor-arg name="authenticationManager" ref="authenticationManager"/>
+         <b:constructor-arg name="excludedUrl" value="/v1/login"/>
+     </b:bean>
 
-
+    <!--https://stackoverflow.com/questions/35381408/how-to-disable-security-for-specific-url-to-retrieve-access-token-in-speing-secu-->
 
 </b:beans>
