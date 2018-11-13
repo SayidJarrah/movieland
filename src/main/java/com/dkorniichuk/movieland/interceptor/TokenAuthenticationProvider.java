@@ -8,9 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -29,7 +34,13 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
         logger.info("TokenAuthenticationProvider");
         final Object token = authenticationToken.getCredentials();
         String uuid = String.valueOf(token);
-        User user = userSecurityService.findUserByTokenUuid(UUID.fromString(uuid));
-        return userSecurityService.findUserByTokenUuid(UUID.fromString(uuid));
+        if ("null".equals(uuid)) {
+            User anonymousUser = new User();
+            anonymousUser.setUserTypeId(3);
+            anonymousUser.getAuthorities();
+            return anonymousUser;
+        }
+        return Optional.ofNullable(userSecurityService.findUserByTokenUuid(UUID.fromString(uuid)))
+                .orElseThrow(() -> new UsernameNotFoundException("Cannot find user with authentication token " + token));
     }
 }

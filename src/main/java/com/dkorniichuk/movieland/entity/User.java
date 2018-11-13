@@ -3,12 +3,14 @@ package com.dkorniichuk.movieland.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public class User implements UserDetails{
+public class User implements UserDetails {
     private int id;
     @JsonIgnore
     private String firstName;
@@ -47,7 +49,9 @@ public class User implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(UserRole.getByValue(getUserTypeId()).name()));
+        return authorities;
     }
 
     @Override

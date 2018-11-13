@@ -15,16 +15,17 @@
 
     <mvc:annotation-driven/>
 
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/pages/"/>
-        <property name="suffix" value=".jsp"/>
-    </bean>
 
-  <!--  <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/v1/**"/>
-            <mvc:exclude-mapping path="/v1/login"/>
-            <bean class="com.dkorniichuk.movieland.interceptor.AuthenticationInterceptor"/>
-        </mvc:interceptor>
-    </mvc:interceptors>-->
+    <!--  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+         <property name="prefix" value="/WEB-INF/pages/"/>
+         <property name="suffix" value=".jsp"/>
+     </bean>-->
+
+   <!--  <mvc:interceptors>
+         <mvc:interceptor>
+             <mvc:mapping path="/v1/**"/>
+             <mvc:exclude-mapping path="/v1/login"/>
+             <bean class="com.dkorniichuk.movieland.interceptor.AuthenticationInterceptor"/>
+         </mvc:interceptor>
+     </mvc:interceptors>-->
 </beans>

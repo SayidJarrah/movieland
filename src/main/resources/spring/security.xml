@@ -4,10 +4,15 @@
          xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
+
     <http auto-config="true" use-expressions="true">
         <intercept-url pattern="/v1/login" access="permitAll()"/>
+        <intercept-url pattern="/**" access="hasRole('ROLE_ANONYMOUS')" method="GET"/>
+        <intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" method="POST"/>
+        <intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" method="PUT"/>
         <!--<intercept-url pattern="/v1/review" access="isAuthenticated()"/>-->
         <custom-filter after="BASIC_AUTH_FILTER" ref="tokenAuthenticationFilter" />
+        <!--<custom-filter after="BASIC_AUTH_FILTER" ref="tokenAuthenticationFilter"/>-->
         <csrf disabled="true"/>
     </http>
 
@@ -24,12 +29,23 @@
             class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationProvider">
     </b:bean>
 
-     <b:bean id="tokenAuthenticationFilter"
-             class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationFilter">
-         <b:constructor-arg name="defaultFilterProcessesUrl" value="/v1/**"/>
-         <b:constructor-arg name="authenticationManager" ref="authenticationManager"/>
-         <b:constructor-arg name="excludedUrl" value="/v1/login"/>
-     </b:bean>
+    <b:bean id="tokenAuthenticationFilter"
+            class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationFilter">
+        <b:constructor-arg name="defaultFilterProcessesUrl" value="/v1/**"/>
+        <b:constructor-arg name="authenticationManager" ref="authenticationManager"/>
+        <b:constructor-arg name="excludedUrl" value="/v1/login"/>
+    </b:bean>
+
+   <!-- <b:bean id="anonymousAuthenticationFilter"
+            class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+
+        <b:constructor-arg name="key" value="foobar"/>
+    </b:bean>
+
+    <b:bean id="anonymousAuthenticationProvider"
+            class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
+        <b:constructor-arg name="key" value="foobar"/>
+    </b:bean>-->
 
     <!--https://stackoverflow.com/questions/35381408/how-to-disable-security-for-specific-url-to-retrieve-access-token-in-speing-secu-->
 

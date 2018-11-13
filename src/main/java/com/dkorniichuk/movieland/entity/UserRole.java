@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum UserRole {
-    ADMIN_ROLE(2),
-    USER_ROLE(1);
+    ROLE_ADMIN(2),
+    ROLE_USER(1),
+    ROLE_ANONYMOUS(3);
 
     private int value;
     private static final Map<Integer, UserRole> USER_ROLE_MAP = new HashMap<>();
