@@ -5,48 +5,37 @@
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 
-    <http auto-config="true" use-expressions="true">
-        <intercept-url pattern="/v1/login" access="permitAll()"/>
-        <intercept-url pattern="/**" access="hasRole('ROLE_ANONYMOUS')" method="GET"/>
-        <intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" method="POST"/>
-        <intercept-url pattern="/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" method="PUT"/>
-        <!--<intercept-url pattern="/v1/review" access="isAuthenticated()"/>-->
-        <custom-filter after="BASIC_AUTH_FILTER" ref="tokenAuthenticationFilter" />
-        <!--<custom-filter after="BASIC_AUTH_FILTER" ref="tokenAuthenticationFilter"/>-->
-        <csrf disabled="true"/>
-    </http>
+    <http create-session="stateless" auto-config="false" entry-point-ref="unauthorizedEntryPoint" use-expressions="true">
+        <custom-filter ref="tokenAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
+        <!--  <intercept-url pattern="/v1/login" access="permitAll()"/>-->
+        <!--  <intercept-url pattern="/**" access="hasRole('ROLE_ANONYMOUS')" method="GET"/>-->
+            <intercept-url pattern="/v1/**" access="hasRole('ROLE_USER')"/>
+        <!--   <intercept-url pattern="/v1/**" access="hasRole('ROLE_ADMIN')" method="PUT"/>-->
+
+       <csrf disabled="true"/>
+   </http>
+   <debug />
+
+   <authentication-manager id="authenticationManager">
+       <authentication-provider ref="tokenAuthenticationProvider"/>
+   </authentication-manager>
 
 
-    <authentication-manager id="authenticationManager">
-        <authentication-provider ref="tokenAuthenticationProvider"/>
-    </authentication-manager>
+   <b:bean id="unauthorizedEntryPoint"
+           class="com.dkorniichuk.movieland.interceptor.UnauthorizedEntryPoint">
+   </b:bean>
 
-    <!--    <b:bean id="tokenAuthenticationProvider"
-               class="com.dkorniichuk.movieland.interceptor.CustomAuthenticationProvider">
-       </b:bean>-->
+   <b:bean id="tokenAuthenticationProvider"
+           class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationProvider">
+   </b:bean>
 
-    <b:bean id="tokenAuthenticationProvider"
-            class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationProvider">
-    </b:bean>
+   <b:bean id="tokenAuthenticationFilter"
+           class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationFilter">
+       <b:constructor-arg name="defaultFilterProcessesUrl" value="/v1/**"/>
+       <b:constructor-arg name="authenticationManager" ref="authenticationManager"/>
+  </b:bean>
 
-    <b:bean id="tokenAuthenticationFilter"
-            class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationFilter">
-        <b:constructor-arg name="defaultFilterProcessesUrl" value="/v1/**"/>
-        <b:constructor-arg name="authenticationManager" ref="authenticationManager"/>
-        <b:constructor-arg name="excludedUrl" value="/v1/login"/>
-    </b:bean>
 
-   <!-- <b:bean id="anonymousAuthenticationFilter"
-            class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
-
-        <b:constructor-arg name="key" value="foobar"/>
-    </b:bean>
-
-    <b:bean id="anonymousAuthenticationProvider"
-            class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
-        <b:constructor-arg name="key" value="foobar"/>
-    </b:bean>-->
-
-    <!--https://stackoverflow.com/questions/35381408/how-to-disable-security-for-specific-url-to-retrieve-access-token-in-speing-secu-->
-
+   <!--https://stackoverflow.com/questions/35381408/how-to-disable-security-for-specific-url-to-retrieve-access-token-in-speing-secu-->
+    <!--http://www.javabydefault.com/2014/11/implementing-token-based-authentication.html-->
 </b:beans>

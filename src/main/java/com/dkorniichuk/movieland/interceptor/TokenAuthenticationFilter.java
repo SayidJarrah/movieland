@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -15,21 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    private String excludedUrl;
 
-    protected TokenAuthenticationFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager, String excludedUrl) {
+    protected TokenAuthenticationFilter(String defaultFilterProcessesUrl, AuthenticationManager authenticationManager/*, String excludedUrl*/) {
         super(defaultFilterProcessesUrl);
-        this.excludedUrl = excludedUrl;
+        super.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(defaultFilterProcessesUrl));
         setAuthenticationManager(authenticationManager);
+        setAuthenticationSuccessHandler(new TokenAuthenticationSuccessHandler());
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         String uuid = request.getHeader("uuid");
-
-
-        final Authentication auth = new UsernamePasswordAuthenticationToken(uuid, uuid);
-
+        Authentication auth = new UsernamePasswordAuthenticationToken(uuid, uuid);
         return getAuthenticationManager().authenticate(auth);
     }
 
@@ -45,10 +43,6 @@ public class TokenAuthenticationFilter extends AbstractAuthenticationProcessingF
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        if (((HttpServletRequest) req).getRequestURI().endsWith(excludedUrl)) {
-            chain.doFilter(req, res);
-        } else {
-            super.doFilter(req, res, chain);
-        }
+        super.doFilter(req, res, chain);
     }
 }
