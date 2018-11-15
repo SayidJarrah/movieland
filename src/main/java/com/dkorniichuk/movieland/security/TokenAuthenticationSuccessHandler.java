@@ -25,6 +25,7 @@ public class TokenAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
         String url = determineTargetUrl(request, response);
         try {
             request.getRequestDispatcher(url).forward(request, response);
+            //TODO:catch more specific exception
         } catch (Exception e) {
             response.sendError(
                     HttpServletResponse.SC_FORBIDDEN,

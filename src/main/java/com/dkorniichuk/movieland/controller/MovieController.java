@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,17 +58,21 @@ public class MovieController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<HttpStatus> addMovie(@RequestBody String movieData,
                                                @RequestHeader String uuid) {
         movieService.addMovie(movieData, uuid);
+        System.out.println("add movie");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseBody
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<HttpStatus> editMovie(@RequestBody String movieData,
                                                 @RequestHeader String uuid) {
         movieService.editMovie(movieData, uuid);
+        System.out.println("Edit movie");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
