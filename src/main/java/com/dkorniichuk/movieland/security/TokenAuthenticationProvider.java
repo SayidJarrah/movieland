@@ -1,4 +1,4 @@
-package com.dkorniichuk.movieland.interceptor;
+package com.dkorniichuk.movieland.security;
 
 import com.dkorniichuk.movieland.entity.User;
 import com.dkorniichuk.movieland.service.UserSecurityService;
@@ -34,6 +34,7 @@ public class TokenAuthenticationProvider extends AbstractUserDetailsAuthenticati
         logger.info("TokenAuthenticationProvider");
         final Object token = authenticationToken.getCredentials();
         String uuid = String.valueOf(token);
+        //TODO: refactor this code
         if ("null".equals(uuid)) {
             User anonymousUser = new User();
             anonymousUser.setUserTypeId(3);

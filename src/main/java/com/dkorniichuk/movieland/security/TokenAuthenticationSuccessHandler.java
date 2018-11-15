@@ -1,4 +1,4 @@
-package com.dkorniichuk.movieland.interceptor;
+package com.dkorniichuk.movieland.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -23,7 +23,13 @@ public class TokenAuthenticationSuccessHandler extends SimpleUrlAuthenticationSu
                                         HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         String url = determineTargetUrl(request, response);
-        request.getRequestDispatcher(url).forward(request, response);
+        try {
+            request.getRequestDispatcher(url).forward(request, response);
+        } catch (Exception e) {
+            response.sendError(
+                    HttpServletResponse.SC_FORBIDDEN,
+                    "Access is denied");
+        }
     }
 
 }

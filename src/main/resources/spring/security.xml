@@ -5,15 +5,11 @@
 						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 
-    <http create-session="stateless" auto-config="false" entry-point-ref="unauthorizedEntryPoint" use-expressions="true">
+    <http  pattern="/v1/**" create-session="stateless" auto-config="false" entry-point-ref="unauthorizedEntryPoint" use-expressions="true">
         <custom-filter ref="tokenAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
-        <!--  <intercept-url pattern="/v1/login" access="permitAll()"/>-->
-        <!--  <intercept-url pattern="/**" access="hasRole('ROLE_ANONYMOUS')" method="GET"/>-->
-            <intercept-url pattern="/v1/**" access="hasRole('ROLE_USER')"/>
-        <!--   <intercept-url pattern="/v1/**" access="hasRole('ROLE_ADMIN')" method="PUT"/>-->
-
        <csrf disabled="true"/>
    </http>
+
    <debug />
 
    <authentication-manager id="authenticationManager">
@@ -22,15 +18,15 @@
 
 
    <b:bean id="unauthorizedEntryPoint"
-           class="com.dkorniichuk.movieland.interceptor.UnauthorizedEntryPoint">
+           class="com.dkorniichuk.movieland.security.UnauthorizedEntryPoint">
    </b:bean>
 
    <b:bean id="tokenAuthenticationProvider"
-           class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationProvider">
+           class="com.dkorniichuk.movieland.security.TokenAuthenticationProvider">
    </b:bean>
 
    <b:bean id="tokenAuthenticationFilter"
-           class="com.dkorniichuk.movieland.interceptor.TokenAuthenticationFilter">
+           class="com.dkorniichuk.movieland.security.TokenAuthenticationFilter">
        <b:constructor-arg name="defaultFilterProcessesUrl" value="/v1/**"/>
        <b:constructor-arg name="authenticationManager" ref="authenticationManager"/>
   </b:bean>
