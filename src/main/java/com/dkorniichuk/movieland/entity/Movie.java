@@ -20,6 +20,8 @@ public class Movie {
     private Set<Genre> genres;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Set<Review> reviews;
+    private String nameNative = name.split("/")[1];
+    private String nameRussian = name.split("/")[0];
 
     public int getId() {
         return id;
@@ -101,12 +103,20 @@ public class Movie {
         this.reviews = reviews;
     }
 
-    public String getRussianName() {
-        return name.split("/")[0];
+    public String getNameRussian() {
+        return nameRussian;
     }
 
-    public String getNativeName() {
-        return name.split("/")[1];
+    public String getNameNative() {
+        return nameNative;
+    }
+
+    public void setNameNative(String nameNative) {
+        this.nameNative = nameNative;
+    }
+
+    public void setNameRussian(String nameRussian) {
+        this.nameRussian = nameRussian;
     }
 
     @Override

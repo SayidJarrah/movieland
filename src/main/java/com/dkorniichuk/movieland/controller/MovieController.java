@@ -60,9 +60,9 @@ public class MovieController {
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<HttpStatus> addMovie(@RequestBody String movieData,
-                                               @RequestHeader String uuid) {
+                                               @RequestHeader String uuid) throws IOException {
+        logger.info("Sending request to add new movie {}", movieData);
         movieService.addMovie(movieData, uuid);
-        System.out.println("add movie");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -71,6 +71,7 @@ public class MovieController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<HttpStatus> editMovie(@RequestBody String movieData,
                                                 @RequestHeader String uuid) {
+        logger.info("Sending request to edit movie");
         movieService.editMovie(movieData, uuid);
         System.out.println("Edit movie");
         return new ResponseEntity<>(HttpStatus.OK);

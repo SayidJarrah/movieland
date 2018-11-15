@@ -5,6 +5,8 @@ import com.dkorniichuk.movieland.entity.Movie;
 import com.dkorniichuk.movieland.service.MovieService;
 import com.dkorniichuk.movieland.service.util.CurrencyConverter;
 import com.dkorniichuk.movieland.service.util.SortingHelper;
+import com.dkorniichuk.movieland.vo.MovieVO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,8 +46,15 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void addMovie(String movieData, String uuid) {
-
+    public void addMovie(String movieData, String uuid){
+        ObjectMapper objectMapper = new ObjectMapper();
+        MovieVO movie = null;
+        try {
+            movie = objectMapper.readValue(movieData, MovieVO.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(movie);
     }
 
     @Override
