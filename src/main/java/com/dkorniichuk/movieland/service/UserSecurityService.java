@@ -10,9 +10,9 @@ public interface UserSecurityService {
 
     AuthenticationToken getAuthenticationToken(String userCredentials) throws IOException;
 
-    void removeAuthenticationToken(UUID uuid);
+    void logout(UUID uuid);
 
-    User getUserByUUID(UUID uuid);
+    User findUserByTokenUuid(UUID uuid);
 
 
 }

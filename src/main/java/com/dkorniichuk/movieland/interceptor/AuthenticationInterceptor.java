@@ -1,4 +1,4 @@
-package com.dkorniichuk.movieland.interceptor;
+/*package com.dkorniichuk.movieland.interceptor;
 
 import com.dkorniichuk.movieland.service.util.AuthenticationTokenCache;
 import org.slf4j.Logger;
@@ -39,3 +39,4 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 
     }
 }
+*/

@@ -1,0 +1,37 @@
+<b:beans xmlns="http://www.springframework.org/schema/security"
+         xmlns:b="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+    <http  pattern="/v1/**" create-session="stateless" auto-config="false" entry-point-ref="unauthorizedEntryPoint" use-expressions="true">
+        <custom-filter ref="tokenAuthenticationFilter" position="FORM_LOGIN_FILTER"/>
+       <csrf disabled="true"/>
+   </http>
+
+   <debug />
+
+   <authentication-manager id="authenticationManager">
+       <authentication-provider ref="tokenAuthenticationProvider"/>
+   </authentication-manager>
+
+
+   <b:bean id="unauthorizedEntryPoint"
+           class="com.dkorniichuk.movieland.security.UnauthorizedEntryPoint">
+   </b:bean>
+
+   <b:bean id="tokenAuthenticationProvider"
+           class="com.dkorniichuk.movieland.security.TokenAuthenticationProvider">
+   </b:bean>
+
+   <b:bean id="tokenAuthenticationFilter"
+           class="com.dkorniichuk.movieland.security.TokenAuthenticationFilter">
+       <b:constructor-arg name="defaultFilterProcessesUrl" value="/v1/**"/>
+       <b:constructor-arg name="authenticationManager" ref="authenticationManager"/>
+  </b:bean>
+
+
+   <!--https://stackoverflow.com/questions/35381408/how-to-disable-security-for-specific-url-to-retrieve-access-token-in-speing-secu-->
+    <!--http://www.javabydefault.com/2014/11/implementing-token-based-authentication.html-->
+</b:beans>

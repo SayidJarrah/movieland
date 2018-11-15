@@ -1,9 +1,7 @@
 package com.dkorniichuk.movieland.controller;
 
 import com.dkorniichuk.movieland.entity.AuthenticationToken;
-import com.dkorniichuk.movieland.entity.User;
 import com.dkorniichuk.movieland.service.UserSecurityService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +36,7 @@ public class UserSecurityController {
     @RequestMapping(value = "/v1/logout", method = RequestMethod.DELETE)
     public ResponseEntity<HttpStatus> logout(@RequestHeader String uuid) {
         logger.info("Sending request to log out");
-        userSecurityService.removeAuthenticationToken(UUID.fromString(uuid));
+        userSecurityService.logout(UUID.fromString(uuid));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
