@@ -2,6 +2,7 @@ package com.dkorniichuk.movieland.service.impl;
 
 import com.dkorniichuk.movieland.dao.ReviewDao;
 import com.dkorniichuk.movieland.dao.UserDao;
+import com.dkorniichuk.movieland.entity.Review;
 import com.dkorniichuk.movieland.entity.User;
 import com.dkorniichuk.movieland.service.UserSecurityService;
 import com.dkorniichuk.movieland.service.util.AuthenticationTokenCache;
@@ -26,12 +27,11 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void addReview(String reviewStr, UUID uuid) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        ReviewVO review = mapper.readValue(reviewStr, ReviewVO.class);
+        Review review = mapper.readValue(reviewStr, Review.class);
         String userKey = cache.getUserKeyByUUID(uuid);
 
-        //TODO: refactor this code!!!
         User user = userDao.getUserByEmail(userKey);
-        review.setUserId(user.getId());
+        review.setUser(user);
         reviewDao.addReview(review);
         System.out.println(user);
 

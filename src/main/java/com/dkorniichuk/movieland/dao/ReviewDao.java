@@ -1,8 +1,8 @@
 package com.dkorniichuk.movieland.dao;
 
-import com.dkorniichuk.movieland.vo.ReviewVO;
+import com.dkorniichuk.movieland.entity.Review;
 
 public interface ReviewDao {
 
-    void addReview(ReviewVO reviewVO);
+    void addReview(Review review);
 }

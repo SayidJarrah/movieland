@@ -1,14 +1,24 @@
 package com.dkorniichuk.movieland.entity;
 
+import com.dkorniichuk.movieland.service.util.deserializer.ReviewDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize(using = ReviewDeserializer.class)
 public class Review {
     private int id;
     private User user;
     private String text;
     @JsonIgnore
     private Movie movie;
+
+    public Review(String text, Movie movie) {
+        this.text = text;
+        this.movie = movie;
+    }
+
+    public Review() {
+    }
 
     public int getId() {
         return id;

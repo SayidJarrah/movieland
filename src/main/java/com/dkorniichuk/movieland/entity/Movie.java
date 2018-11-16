@@ -1,12 +1,12 @@
 package com.dkorniichuk.movieland.entity;
 
+import com.dkorniichuk.movieland.service.util.deserializer.MovieDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import java.util.List;
 import java.util.Set;
-
+@JsonDeserialize(using = MovieDeserializer.class)
 public class Movie {
     private int id;
     @JsonIgnore
@@ -20,8 +20,19 @@ public class Movie {
     private Set<Genre> genres;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Set<Review> reviews;
-    private String nameNative = name.split("/")[1];
-    private String nameRussian = name.split("/")[0];
+ //   private String nameNative = name.split("/")[1];
+ //   private String nameRussian = name.split("/")[0];
+
+    public Movie(){};
+
+    public Movie(String name, int yearOfRelease, String description, double rating, double price, String picturePath) {
+        this.name = name;
+        this.yearOfRelease = yearOfRelease;
+        this.description = description;
+        this.rating = rating;
+        this.price = price;
+        this.picturePath = picturePath;
+    }
 
     public int getId() {
         return id;
@@ -103,7 +114,7 @@ public class Movie {
         this.reviews = reviews;
     }
 
-    public String getNameRussian() {
+   /* public String getNameRussian() {
         return nameRussian;
     }
 
@@ -117,7 +128,7 @@ public class Movie {
 
     public void setNameRussian(String nameRussian) {
         this.nameRussian = nameRussian;
-    }
+    }*/
 
     @Override
     public boolean equals(Object o) {
