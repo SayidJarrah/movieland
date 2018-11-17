@@ -5,9 +5,9 @@ import com.dkorniichuk.movieland.entity.Movie;
 import com.dkorniichuk.movieland.service.MovieService;
 import com.dkorniichuk.movieland.service.util.CurrencyConverter;
 import com.dkorniichuk.movieland.service.util.SortingHelper;
-import com.dkorniichuk.movieland.vo.MovieVO;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 
 @Service
 public class MovieServiceImpl implements MovieService {
-
+    Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private MovieDao movieDao;
 
@@ -47,20 +47,16 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void addMovie(String movieData, String uuid){
+    public void addMovie(String movieData, String uuid) throws IOException {
+        logger.info("Add movie service started...");
         ObjectMapper objectMapper = new ObjectMapper();
-        Movie movie = null;
-        try {
-            movie = objectMapper.readValue(movieData, Movie.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(movie);
+        Movie movie = objectMapper.readValue(movieData, Movie.class);
+        movieDao.addMovie(movie);
     }
 
     @Override
-    public void editMovie(String moviedData, String uuid) {
-
+    public void editMovie(String movieData, String uuid) {
+        logger.info("Edit movie service started...");
     }
 
 }

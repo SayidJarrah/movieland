@@ -81,6 +81,22 @@
         <constructor-arg value="INSERT INTO review (user_id,movie_id,text) values (?,?,?);"/>
     </bean>
 
+    <bean id="addPoster" class="java.lang.String">
+        <constructor-arg value="INSERT INTO poster (path,name) values(?,?)"/>
+    </bean>
+
+    <bean id="addMovie" class="java.lang.String">
+        <constructor-arg value="INSERT INTO movie (name,poster_id,year,description,rating,price) values(?,?,?,?,?,?);"/>
+    </bean>
+
+    <bean id="addToMovieHasCountry" class="java.lang.String">
+        <constructor-arg value="INSERT INTO movie_has_country (movie_id,country_id) values(?,?)"/>
+    </bean>
+
+    <bean id="addToMovieHasGenre" class="java.lang.String">
+        <constructor-arg value="INSERT INTO movie_has_genre (movie_id,genre_id) values(?,?)"/>
+    </bean>
+
     <bean id="getAllCountries" class="java.lang.String">
         <constructor-arg value="SELECT * FROM country"/>
     </bean>
