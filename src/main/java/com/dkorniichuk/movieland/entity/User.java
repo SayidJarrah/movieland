@@ -1,7 +1,7 @@
 package com.dkorniichuk.movieland.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.dkorniichuk.movieland.service.util.serializer.UserSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,17 +10,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@JsonSerialize(using = UserSerializer.class)
 public class User implements UserDetails {
     private int id;
-    @JsonIgnore
     private String firstName;
-    @JsonIgnore
     private String lastName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
-    @JsonIgnore
     private int userTypeId;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String email;
 
     public int getId() {

@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -123,10 +124,12 @@ public class MovieDaoImpl implements MovieDao {
 
     //TODO: rewrite with factory method pattern
     private void updateMovieHasGenre(int movieId, Set<Genre> genres) {
+        List<Genre> genreList = new ArrayList<>();
+        genreList.addAll(genres);
         jdbcTemplate.batchUpdate(addToMovieHasGenre, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                Genre genre = genres.iterator().next();
+                Genre genre = genreList.get(i);
                 ps.setInt(1, movieId);
                 ps.setInt(2, genre.getId());
             }
@@ -139,10 +142,12 @@ public class MovieDaoImpl implements MovieDao {
     }
 
     private void updateMovieHasCountry(int movieId, Set<Country> countries) {
+        List<Country> countryList = new ArrayList<>();
+        countryList.addAll(countries);
         jdbcTemplate.batchUpdate(addToMovieHasCountry, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                Country country = countries.iterator().next();
+                Country country = countryList.get(i);
                 ps.setInt(1, movieId);
                 ps.setInt(2, country.getId());
             }
