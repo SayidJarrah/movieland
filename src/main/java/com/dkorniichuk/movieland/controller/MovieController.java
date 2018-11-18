@@ -59,21 +59,19 @@ public class MovieController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<HttpStatus> addMovie(@RequestBody String movieData,
-                                               @RequestHeader String uuid) throws IOException {
+    public ResponseEntity<HttpStatus> addMovie(@RequestBody String movieData) throws IOException {
         logger.info("Sending request to add new movie {}", movieData);
-        movieService.addMovie(movieData, uuid);
+        movieService.addMovie(movieData);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<HttpStatus> editMovie(@RequestBody String movieData,
-                                                @RequestHeader String uuid) {
+    public ResponseEntity<HttpStatus> editMovie(@PathVariable int id,
+                                                @RequestBody String movieData) throws IOException {
         logger.info("Sending request to edit movie");
-        movieService.editMovie(movieData, uuid);
-        System.out.println("Edit movie");
+        movieService.editMovie(id, movieData);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

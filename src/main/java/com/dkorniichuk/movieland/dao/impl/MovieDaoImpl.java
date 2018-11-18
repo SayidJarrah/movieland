@@ -160,8 +160,10 @@ public class MovieDaoImpl implements MovieDao {
     }
 
     @Override
-    public void editMovie(Movie movie) {
-
+    public void editMovie(int id, Movie movie) {
+        jdbcTemplate.update("UPDATE movie SET name =?, year=?, description =?, price=?, rating=? WHERE id = ?",
+                movie.getName(), movie.getYearOfRelease(), movie.getDescription(),
+                movie.getPrice(), movie.getRating(), id);
     }
 
 

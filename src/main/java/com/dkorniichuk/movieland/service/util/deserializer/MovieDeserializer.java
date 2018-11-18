@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class MovieDeserializer extends JsonDeserializer<Movie> {
@@ -21,24 +23,34 @@ public class MovieDeserializer extends JsonDeserializer<Movie> {
         ObjectCodec oc = jsonParser.getCodec();
         JsonNode node = oc.readTree(jsonParser);
 
-        final String nameNative = node.get("nameNative").asText();
-        final String nameRussian = node.get("nameRussian").asText();
-        final int yearOfRelease = node.get("yearOfRelease").asInt();
-        final String description = node.get("description").asText();
-        final double rating = node.get("rating").asDouble();
-        final double price = node.get("price").asDouble();
-        final String picturePath = node.get("picturePath").asText();
+        String nameNative = node.get("nameNative").asText();
+        String nameRussian = node.get("nameRussian").asText();
+        int yearOfRelease = node.get("yearOfRelease").asInt();
+        String description = Optional.ofNullable(node.get("description"))
+                .map(n -> n.asText()).orElse(null);
+        double rating = Optional.ofNullable(node.get("rating"))
+                .map(n -> n.asDouble()).orElse(0.0);
+        double price = Optional.ofNullable(node.get("price"))
+                .map(n -> n.asDouble()).orElse(0.0);
+        String picturePath = Optional.ofNullable(node.get("picturePath")).map(n -> n.asText()).orElse(null);
 
         JsonNode nodeGenres = node.get("genres");
         JsonNode nodeCountries = node.get("countries");
 
-        Set<Genre> genres = new ObjectMapper()
-                .readerFor(new TypeReference<Set<Genre>>() {
-                }).readValue(nodeGenres);
-        Set<Country> countries = new ObjectMapper()
-                .readerFor(new TypeReference<Set<Country>>() {
-                }).readValue(nodeCountries);
+        Set<Genre> genres = new HashSet<>();
+        Set<Country> countries = new HashSet<>();
 
+        if (nodeGenres != null) {
+            genres = new ObjectMapper()
+                    .readerFor(new TypeReference<Set<Genre>>() {
+                    }).readValue(nodeGenres);
+        }
+
+        if (nodeCountries != null) {
+            countries = new ObjectMapper()
+                    .readerFor(new TypeReference<Set<Country>>() {
+                    }).readValue(nodeCountries);
+        }
 
         return new Movie(nameNative + "/" + nameRussian, yearOfRelease, description, rating, price, picturePath, genres, countries);
     }
