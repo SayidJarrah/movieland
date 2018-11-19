@@ -29,7 +29,7 @@ public class MovieResultSetExtractor implements ResultSetExtractor<List<Movie>> 
                 movie.setDescription(resultSet.getString("description"));
                 movie.setRating(resultSet.getDouble("rating"));
                 movie.setPrice(resultSet.getDouble("price"));
-                movie.setPicturePath(resultSet.getString("poster"));
+                movie.setPicturePath(resultSet.getString("picturePath"));
                 map.put(id, movie);
             }
 

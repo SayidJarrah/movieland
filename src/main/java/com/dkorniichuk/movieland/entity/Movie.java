@@ -10,7 +10,6 @@ import java.util.Set;
 @JsonDeserialize(using = MovieDeserializer.class)
 public class Movie {
     private int id;
-    @JsonIgnore
     private String name;
     private int yearOfRelease;
     private String description;

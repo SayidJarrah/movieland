@@ -46,9 +46,6 @@ public class MovieDaoImpl implements MovieDao {
     private String addMovie;
 
     @Autowired
-    private String addPoster;
-
-    @Autowired
     private String addToMovieHasGenre;
 
     @Autowired
@@ -91,7 +88,7 @@ public class MovieDaoImpl implements MovieDao {
                 public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                     PreparedStatement ps = connection.prepareStatement(addMovie, Statement.RETURN_GENERATED_KEYS);
                     ps.setString(1, movie.getName());
-                    ps.setInt(2, addPoster(movie));
+                    ps.setString(2, movie.getPicturePath());
                     ps.setInt(3, movie.getYearOfRelease());
                     ps.setString(4, movie.getDescription());
                     ps.setDouble(5, movie.getRating());
@@ -108,21 +105,6 @@ public class MovieDaoImpl implements MovieDao {
         }
     }
 
-    private int addPoster(Movie movie) {
-        logger.info("Start query to get add poster");
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement ps = connection.prepareStatement(addPoster, Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, movie.getPicturePath());
-                ps.setString(2, movie.getName());
-                return ps;
-            }
-        }, keyHolder);
-        logger.info("Added poster, id = {}", keyHolder.getKey().intValue());
-        return keyHolder.getKey().intValue();
-    }
 
     //TODO: rewrite with factory method pattern
     private void updateMovieHasGenre(int movieId, Set<Genre> genres) {
@@ -170,7 +152,7 @@ public class MovieDaoImpl implements MovieDao {
         updateMovieHasGenre(id, movie.getGenres());
         jdbcTemplate.update("DELETE FROM movie_has_country WHERE movie_id = ?",id);
         updateMovieHasCountry(id,movie.getCountries());
-        jdbcTemplate.update(editMovie, new Object[]{movie.getName(), addPoster(movie), movie.getYearOfRelease(), movie.getDescription(),
+        jdbcTemplate.update(editMovie, new Object[]{movie.getName(), movie.getPicturePath(), movie.getYearOfRelease(), movie.getDescription(),
                 movie.getRating(), movie.getPrice(), id});
     }
 

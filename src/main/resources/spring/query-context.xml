@@ -6,12 +6,11 @@
 
     <bean id="getAllMovies" class="java.lang.String">
         <constructor-arg value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
-                                       p.path poster, g.id genre_id, g.name genre, c.name country,
+                                       m.picturePath, g.id genre_id, g.name genre, c.name country,
                                        c.id country_id
-                                FROM   movie m, poster p, movie_has_genre mhg, genre g,
+                                FROM   movie m, movie_has_genre mhg, genre g,
                                        movie_has_country mhc, country c
-                                WHERE  m.poster_id=p.id
-                                AND    m.id=mhg.movie_id
+                                WHERE  m.id=mhg.movie_id
                                 AND    mhg.genre_id=g.id
                                 AND    m.id=mhc.movie_id
                                 AND    mhc.country_id=c.id"/>
@@ -19,12 +18,11 @@
 
     <bean id="getRandomMovies" class="java.lang.String">
         <constructor-arg value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
-                                       p.path poster, g.id genre_id, g.name genre, c.name country,
+                                       m.picturePath, g.id genre_id, g.name genre, c.name country,
                                        c.id country_id
-                                FROM   movie m, poster p, movie_has_genre mhg, genre g,
+                                FROM   movie m, movie_has_genre mhg, genre g,
                                        movie_has_country mhc, country c
-                                WHERE  m.poster_id=p.id
-                                AND    m.id=mhg.movie_id
+                                WHERE  m.id=mhg.movie_id
                                 AND    mhg.genre_id=g.id
                                 AND    m.id=mhc.movie_id
                                 AND    mhc.country_id=c.id
@@ -34,12 +32,11 @@
 
     <bean id="getMoviesByGenre" class="java.lang.String">
         <constructor-arg value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
-                                       p.path poster, g.id genre_id, g.name genre, c.name country,
+                                       m.picturePath, g.id genre_id, g.name genre, c.name country,
                                        c.id country_id
-                                FROM   movie m, poster p, movie_has_genre mhg, genre g,
+                                FROM   movie m, movie_has_genre mhg, genre g,
                                        movie_has_country mhc, country c
-                                WHERE  m.poster_id=p.id
-                                AND    m.id=mhg.movie_id
+                                WHERE  m.id=mhg.movie_id
                                 AND    mhg.genre_id=g.id
                                 AND    m.id=mhc.movie_id
                                 AND    mhc.country_id=c.id
@@ -52,7 +49,7 @@
 
     <bean id="getMovieById" class="java.lang.String">
         <constructor-arg value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
-                                         p.path poster, g.id genre_id, g.name genre, c.name country,
+                                         m.picturePath, g.id genre_id, g.name genre, c.name country,
                                          c.id country_id, r.id review_id, r.text, u.id user_id,
                                          u.first_name, u.last_name
                                 FROM movie m
@@ -60,8 +57,6 @@
                                 ON r.movie_id=m.id
                                 LEFT JOIN user u
                                 ON r.user_id=u.id
-                                JOIN poster p
-                                ON m.poster_id=p.id
                                 JOIN movie_has_genre mhg
                                 ON m.id=mhg.movie_id
                                 JOIN genre g
@@ -81,17 +76,14 @@
         <constructor-arg value="INSERT INTO review (user_id,movie_id,text) values (?,?,?);"/>
     </bean>
 
-    <bean id="addPoster" class="java.lang.String">
-        <constructor-arg value="INSERT INTO poster (path,name) values(?,?)"/>
-    </bean>
 
     <bean id="addMovie" class="java.lang.String">
-        <constructor-arg value="INSERT INTO movie (name,poster_id,year,description,rating,price) values(?,?,?,?,?,?);"/>
+        <constructor-arg value="INSERT INTO movie (name,picturePath,year,description,rating,price) values(?,?,?,?,?,?);"/>
     </bean>
 
     <bean id="editMovie" class="java.lang.String">
         <constructor-arg
-                value="UPDATE movie SET name = ?, poster_id = ? ,year=?,description=? ,rating=?,price=? WHERE id =?;"/>
+                value="UPDATE movie SET name = ?, picturePath = ? ,year=?,description=? ,rating=?,price=? WHERE id =?;"/>
     </bean>
 
     <bean id="addToMovieHasCountry" class="java.lang.String">
