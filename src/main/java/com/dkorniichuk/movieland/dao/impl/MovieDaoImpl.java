@@ -53,6 +53,8 @@ public class MovieDaoImpl implements MovieDao {
 
     @Autowired
     private String addToMovieHasCountry;
+    @Autowired
+    private String editMovie;
 
     @Override
     public List<Movie> getAllMovies() {
@@ -159,11 +161,17 @@ public class MovieDaoImpl implements MovieDao {
         });
     }
 
+    //TODO: think about poster and other related tables
+    //TODO: not tested functionality
     @Override
     public void editMovie(int id, Movie movie) {
-        jdbcTemplate.update("UPDATE movie SET name =?, year=?, description =?, price=?, rating=? WHERE id = ?",
-                movie.getName(), movie.getYearOfRelease(), movie.getDescription(),
-                movie.getPrice(), movie.getRating(), id);
+        logger.info("Start query to edit movie id={}", id);
+        jdbcTemplate.update("DELETE FROM movie_has_genre WHERE movie_id = ?",id);
+        updateMovieHasGenre(id, movie.getGenres());
+        jdbcTemplate.update("DELETE FROM movie_has_country WHERE movie_id = ?",id);
+        updateMovieHasCountry(id,movie.getCountries());
+        jdbcTemplate.update(editMovie, new Object[]{movie.getName(), addPoster(movie), movie.getYearOfRelease(), movie.getDescription(),
+                movie.getRating(), movie.getPrice(), id});
     }
 
 

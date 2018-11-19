@@ -89,6 +89,11 @@
         <constructor-arg value="INSERT INTO movie (name,poster_id,year,description,rating,price) values(?,?,?,?,?,?);"/>
     </bean>
 
+    <bean id="editMovie" class="java.lang.String">
+        <constructor-arg
+                value="UPDATE movie SET name = ?, poster_id = ? ,year=?,description=? ,rating=?,price=? WHERE id =?;"/>
+    </bean>
+
     <bean id="addToMovieHasCountry" class="java.lang.String">
         <constructor-arg value="INSERT INTO movie_has_country (movie_id,country_id) values(?,?)"/>
     </bean>

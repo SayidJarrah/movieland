@@ -4,10 +4,10 @@ import com.dkorniichuk.movieland.dao.MovieDao;
 import com.dkorniichuk.movieland.entity.Movie;
 import com.dkorniichuk.movieland.service.MovieService;
 import com.dkorniichuk.movieland.service.util.CurrencyConverter;
+import com.dkorniichuk.movieland.service.util.JsonHelper;
 import com.dkorniichuk.movieland.service.util.SortingHelper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +62,11 @@ public class MovieServiceImpl implements MovieService {
         ObjectMapper objectMapper = new ObjectMapper();
         Movie movie = movieDao.getMovieById(id);
         JsonNode updatedMovieData = objectMapper.readTree(movieData);
-        JsonNode oldMovieData = objectMapper.convertValue(movie,JsonNode.class);
-        // movieDao.editMovie(id,movie);
+        JsonNode oldMovieData = objectMapper.convertValue(movie, JsonNode.class);
+        JsonNode result = JsonHelper.merge(oldMovieData, updatedMovieData);
+        Movie updatedMovie = objectMapper.treeToValue(result,Movie.class);
+        System.out.println(updatedMovie);
+         movieDao.editMovie(id,updatedMovie);
     }
 
 }
