@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public interface MovieService {
 
@@ -19,6 +20,8 @@ public interface MovieService {
 
     void addMovie(String movieData) throws IOException;
 
-    void editMovie(int id, String moviedData) throws IOException;
+    void editMovie(int id, String movieData) throws IOException;
+
+    void rateMovie(int id, String rateData, UUID uuid) throws IOException;
 
 }

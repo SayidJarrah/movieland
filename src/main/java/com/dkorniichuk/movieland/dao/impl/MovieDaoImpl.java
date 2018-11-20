@@ -143,17 +143,26 @@ public class MovieDaoImpl implements MovieDao {
         });
     }
 
-    //TODO: think about poster and other related tables
-    //TODO: not tested functionality
+    //TODO: SQL queries to configuration
     @Override
     public void editMovie(int id, Movie movie) {
         logger.info("Start query to edit movie id={}", id);
-        jdbcTemplate.update("DELETE FROM movie_has_genre WHERE movie_id = ?",id);
+        jdbcTemplate.update("DELETE FROM movie_has_genre WHERE movie_id = ?", id);
         updateMovieHasGenre(id, movie.getGenres());
-        jdbcTemplate.update("DELETE FROM movie_has_country WHERE movie_id = ?",id);
-        updateMovieHasCountry(id,movie.getCountries());
+        jdbcTemplate.update("DELETE FROM movie_has_country WHERE movie_id = ?", id);
+        updateMovieHasCountry(id, movie.getCountries());
         jdbcTemplate.update(editMovie, new Object[]{movie.getName(), movie.getPicturePath(), movie.getYearOfRelease(), movie.getDescription(),
                 movie.getRating(), movie.getPrice(), id});
+    }
+
+
+    @Override
+    public void rateMovie(int movieId, double rating, int userId) {
+        logger.info("Start query to rate movie id={}", movieId);
+        jdbcTemplate.update("UPDATE rate SET rating = ? WHERE movie_id = ? AND user_id = ?", rating, movieId, userId);
+        //TODO : update average rating
+
+        jdbcTemplate.update("update movie set rating = (select sum(rating)/count(rating) from `mydb`.`rate`) where id=?",movieId);
     }
 
 

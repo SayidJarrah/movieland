@@ -23,14 +23,14 @@ public class MovieDeserializer extends JsonDeserializer<Movie> {
         ObjectCodec oc = jsonParser.getCodec();
         JsonNode node = oc.readTree(jsonParser);
 
-        String nameNative = node.get("nameNative").asText();
-        String nameRussian = node.get("nameRussian").asText();
-        int yearOfRelease = node.get("yearOfRelease").asInt();
+        String nameNative = Optional.ofNullable(node.get("nameNative")).map(n -> n.asText()).orElse(null);
+        String nameRussian = Optional.ofNullable(node.get("nameRussian")).map(n -> n.asText()).orElse(null);
+        Integer yearOfRelease = Optional.ofNullable(node.get("yearOfRelease")).map(n -> n.asInt()).orElse(null);
         String description = Optional.ofNullable(node.get("description"))
                 .map(n -> n.asText()).orElse(null);
-        double rating = Optional.ofNullable(node.get("rating"))
-                .map(n -> n.asDouble()).orElse(0.0);
-        double price = Optional.ofNullable(node.get("price"))
+        Double rating = Optional.ofNullable(node.get("rating"))
+                .map(n -> n.asDouble()).orElse(null);
+        Double price = Optional.ofNullable(node.get(null))
                 .map(n -> n.asDouble()).orElse(0.0);
         String picturePath = Optional.ofNullable(node.get("picturePath")).map(n -> n.asText()).orElse(null);
 

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/v1/movie")
@@ -72,6 +73,17 @@ public class MovieController {
                                                 @RequestBody String movieData) throws IOException {
         logger.info("Sending request to edit movie");
         movieService.editMovie(id, movieData);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/{id}/rate",method = RequestMethod.POST)
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<HttpStatus> rateMovie(@PathVariable int id,
+                                                @RequestBody String rateData,
+                                                @RequestHeader String uuid) throws IOException {
+        logger.info("Sending request to rate movie: id ={}",id);
+        movieService.rateMovie(id,rateData, UUID.fromString(uuid));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

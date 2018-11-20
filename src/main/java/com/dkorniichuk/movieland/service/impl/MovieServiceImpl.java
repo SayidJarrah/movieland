@@ -1,8 +1,11 @@
 package com.dkorniichuk.movieland.service.impl;
 
 import com.dkorniichuk.movieland.dao.MovieDao;
+import com.dkorniichuk.movieland.dao.UserDao;
 import com.dkorniichuk.movieland.entity.Movie;
+import com.dkorniichuk.movieland.entity.User;
 import com.dkorniichuk.movieland.service.MovieService;
+import com.dkorniichuk.movieland.service.util.AuthenticationTokenCache;
 import com.dkorniichuk.movieland.service.util.CurrencyConverter;
 import com.dkorniichuk.movieland.service.util.JsonHelper;
 import com.dkorniichuk.movieland.service.util.SortingHelper;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 @Service
@@ -25,7 +29,13 @@ public class MovieServiceImpl implements MovieService {
     private MovieDao movieDao;
 
     @Autowired
+    private UserDao userDao;
+
+    @Autowired
     private CurrencyConverter converter;
+
+    @Autowired
+    private AuthenticationTokenCache cache;
 
     @Override
     public List<Movie> getAllMovies(Map<String, String> sortedParams) {
@@ -56,6 +66,7 @@ public class MovieServiceImpl implements MovieService {
         movieDao.addMovie(movie);
     }
 
+    //TODO:refactor
     @Override
     public void editMovie(int id, String movieData) throws IOException {
         logger.info("Edit movie service started...");
@@ -64,9 +75,22 @@ public class MovieServiceImpl implements MovieService {
         JsonNode updatedMovieData = objectMapper.readTree(movieData);
         JsonNode oldMovieData = objectMapper.convertValue(movie, JsonNode.class);
         JsonNode result = JsonHelper.merge(oldMovieData, updatedMovieData);
-        Movie updatedMovie = objectMapper.treeToValue(result,Movie.class);
+        Movie updatedMovie = objectMapper.treeToValue(result, Movie.class);
         System.out.println(updatedMovie);
-         movieDao.editMovie(id,updatedMovie);
+        movieDao.editMovie(id, updatedMovie);
+    }
+
+    @Override
+    public void rateMovie(int id, String rateData, UUID uuid) throws IOException {
+        logger.info("Rate movie service started...");
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        //TODO: to helper class (used also for review)
+        String userKey = cache.getUserKeyByUUID(uuid);
+        User user = userDao.getUserByEmail(userKey);
+
+        Double rating = objectMapper.readValue(rateData, Double.class);
+        movieDao.rateMovie(id, rating,user.getId());
     }
 
 }
