@@ -76,15 +76,24 @@ public class MovieController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{id}/rate",method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/rate", method = RequestMethod.POST)
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<HttpStatus> rateMovie(@PathVariable int id,
                                                 @RequestBody String rateData,
                                                 @RequestHeader String uuid) throws IOException {
-        logger.info("Sending request to rate movie: id ={}",id);
-        movieService.rateMovie(id,rateData, UUID.fromString(uuid));
+        logger.info("Sending request to rate movie: id ={}", id);
+        movieService.rateMovie(id, rateData, UUID.fromString(uuid));
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/rating", method = RequestMethod.GET)
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public Double getOwnRatingForMovie(@PathVariable int id,
+                                       @RequestHeader String uuid) throws IOException {
+        logger.info("Sending request to get own rating for movie id={}", id);
+        return movieService.getOwnRatingForMovie(id, UUID.fromString(uuid));
     }
 
 }

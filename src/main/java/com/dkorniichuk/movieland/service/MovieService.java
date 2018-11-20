@@ -24,4 +24,6 @@ public interface MovieService {
 
     void rateMovie(int id, String rateData, UUID uuid) throws IOException;
 
+    Double getOwnRatingForMovie(int id, UUID uuid) throws IOException;
+
 }

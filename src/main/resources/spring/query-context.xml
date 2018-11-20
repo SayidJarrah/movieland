@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="getAllMovies" class="java.lang.String">
-        <constructor-arg value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
+
+    <util:map id="queryMap" map-class="java.util.HashMap">
+        <entry key="isRatedByCurrentUser" value="SELECT COUNT(*) FROM rate WHERE movie_id = ? AND user_id = ?"/>
+        <entry key="addRate" value="INSERT INTO rate (rating,user_id,movie_id) VALUES (?,?,?)"/>
+        <entry key="updateOwnRate" value="UPDATE rate SET rating = ? WHERE movie_id = ? AND user_id = ?"/>
+        <entry key="updateTotalRate"
+               value="UPDATE movie SET rating = (SELECT ROUND(SUM(rating)/COUNT(rating),1) FROM rate) WHERE id=?"/>
+        <entry key="getAllMovies" value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
                                        m.picturePath, g.id genre_id, g.name genre, c.name country,
                                        c.id country_id
                                 FROM   movie m, movie_has_genre mhg, genre g,
@@ -14,10 +20,7 @@
                                 AND    mhg.genre_id=g.id
                                 AND    m.id=mhc.movie_id
                                 AND    mhc.country_id=c.id"/>
-    </bean>
-
-    <bean id="getRandomMovies" class="java.lang.String">
-        <constructor-arg value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
+        <entry key="getRandomMovies" value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
                                        m.picturePath, g.id genre_id, g.name genre, c.name country,
                                        c.id country_id
                                 FROM   movie m, movie_has_genre mhg, genre g,
@@ -28,10 +31,7 @@
                                 AND    mhc.country_id=c.id
                                 ORDER BY RAND()
                                 LIMIT 3;"/>
-    </bean>
-
-    <bean id="getMoviesByGenre" class="java.lang.String">
-        <constructor-arg value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
+        <entry key="getMoviesByGenre" value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
                                        m.picturePath, g.id genre_id, g.name genre, c.name country,
                                        c.id country_id
                                 FROM   movie m, movie_has_genre mhg, genre g,
@@ -41,14 +41,8 @@
                                 AND    m.id=mhc.movie_id
                                 AND    mhc.country_id=c.id
                                 AND    g.id = ?"/>
-    </bean>
-
-    <bean id="getAllGenres" class="java.lang.String">
-        <constructor-arg value="SELECT id, name FROM genre;"/>
-    </bean>
-
-    <bean id="getMovieById" class="java.lang.String">
-        <constructor-arg value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
+        <entry key="getAllGenres" value="SELECT id, name FROM genre;"/>
+        <entry key="getMovieById" value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
                                          m.picturePath, g.id genre_id, g.name genre, c.name country,
                                          c.id country_id, r.id review_id, r.text, u.id user_id,
                                          u.first_name, u.last_name
@@ -66,37 +60,20 @@
                                 JOIN country c
                                 ON mhc.country_id=c.id
                                 WHERE m.id=?"/>
-    </bean>
+        <entry key="getUserByEmail" value="SELECT * FROM user WHERE email = ?"/>
+        <entry key="addReview" value="INSERT INTO review (user_id,movie_id,text) values (?,?,?);"/>
+        <entry key="addMovie"
+               value="INSERT INTO movie (name,picturePath,year,description,rating,price) values(?,?,?,?,?,?);"/>
+        <entry key="editMovie"
+               value="UPDATE movie SET name = ?, picturePath = ? ,year=?,description=? ,rating=?,price=? WHERE id =?;"/>
+        <entry key="addToMovieHasCountry" value="INSERT INTO movie_has_country (movie_id,country_id) values(?,?)"/>
+        <entry key="addToMovieHasGenre" value="INSERT INTO movie_has_genre (movie_id,genre_id) values(?,?)"/>
+        <entry key="getAllCountries" value="SELECT * FROM country"/>
+        <entry key="cleanUpMovieHasGenreWhenEditMovie" value="DELETE FROM movie_has_genre WHERE movie_id = ?"/>
+        <entry key="cleanUpMovieHasCountryWhenEditMovie" value="DELETE FROM movie_has_country WHERE movie_id = ?"/>
+        <entry key="getOwnRatingForMovie" value="SELECT rating FROM rate WHERE movie_id =? AND user_id = ?"/>
+    </util:map>
 
-    <bean id="getUserByEmail" class="java.lang.String">
-        <constructor-arg value="SELECT * FROM user WHERE email = ?"/>
-    </bean>
-
-    <bean id="addReview" class="java.lang.String">
-        <constructor-arg value="INSERT INTO review (user_id,movie_id,text) values (?,?,?);"/>
-    </bean>
-
-
-    <bean id="addMovie" class="java.lang.String">
-        <constructor-arg value="INSERT INTO movie (name,picturePath,year,description,rating,price) values(?,?,?,?,?,?);"/>
-    </bean>
-
-    <bean id="editMovie" class="java.lang.String">
-        <constructor-arg
-                value="UPDATE movie SET name = ?, picturePath = ? ,year=?,description=? ,rating=?,price=? WHERE id =?;"/>
-    </bean>
-
-    <bean id="addToMovieHasCountry" class="java.lang.String">
-        <constructor-arg value="INSERT INTO movie_has_country (movie_id,country_id) values(?,?)"/>
-    </bean>
-
-    <bean id="addToMovieHasGenre" class="java.lang.String">
-        <constructor-arg value="INSERT INTO movie_has_genre (movie_id,genre_id) values(?,?)"/>
-    </bean>
-
-    <bean id="getAllCountries" class="java.lang.String">
-        <constructor-arg value="SELECT * FROM country"/>
-    </bean>
 
     <bean id="nbuCurrencyRateURL" class="java.lang.String">
         <constructor-arg value="https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json&amp;valcode="/>

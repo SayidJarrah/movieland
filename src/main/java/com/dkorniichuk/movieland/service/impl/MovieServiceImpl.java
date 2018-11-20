@@ -89,8 +89,21 @@ public class MovieServiceImpl implements MovieService {
         String userKey = cache.getUserKeyByUUID(uuid);
         User user = userDao.getUserByEmail(userKey);
 
-        Double rating = objectMapper.readValue(rateData, Double.class);
-        movieDao.rateMovie(id, rating,user.getId());
+        JsonNode ratingNode = objectMapper.readTree(rateData);
+        String rating = ratingNode.get("rating").asText();
+
+        movieDao.rateMovie(id, Double.valueOf(rating), user.getId());
     }
+
+    @Override
+    public Double getOwnRatingForMovie(int id, UUID uuid) throws IOException {
+        logger.info("Get own movie rating service started...");
+      //TODO: to helper class (used also for review)
+        String userKey = cache.getUserKeyByUUID(uuid);
+        User user = userDao.getUserByEmail(userKey);
+
+        return movieDao.getOwnRatingForMovie(id, user.getId());
+    }
+
 
 }

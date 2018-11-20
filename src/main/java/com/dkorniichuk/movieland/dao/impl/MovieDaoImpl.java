@@ -15,11 +15,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -30,51 +32,32 @@ public class MovieDaoImpl implements MovieDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private String getAllMovies;
-
-    @Autowired
-    private String getRandomMovies;
-
-    @Autowired
-    private String getMoviesByGenre;
-
-    @Autowired
-    private String getMovieById;
-
-    @Autowired
-    private String addMovie;
-
-    @Autowired
-    private String addToMovieHasGenre;
-
-    @Autowired
-    private String addToMovieHasCountry;
-    @Autowired
-    private String editMovie;
+    @Resource(name = "queryMap")
+    private HashMap<String, String> queryMap;
 
     @Override
     public List<Movie> getAllMovies() {
         logger.info("Start query to get all movies from DB");
-        return jdbcTemplate.query(getAllMovies, new MovieResultSetExtractor());
+        return jdbcTemplate.query(queryMap.get("getAllMovies"), new MovieResultSetExtractor());
     }
 
     @Override
     public List<Movie> getRandomMovies() {
         logger.info("Start query to get 3 random movies from DB");
-        return jdbcTemplate.query(getRandomMovies, new MovieResultSetExtractor());
+        return jdbcTemplate.query(queryMap.get("getRandomMovies"), new MovieResultSetExtractor());
     }
 
     @Override
     public List<Movie> getMoviesByGenre(int id) {
         logger.info("Start query to get movies by genre");
-        return jdbcTemplate.query(getMoviesByGenre, new Object[]{id}, new MovieResultSetExtractor());
+        return jdbcTemplate.query(queryMap.get("getMoviesByGenre"), new Object[]{id}, new MovieResultSetExtractor());
     }
 
     @Override
     public Movie getMovieById(int id) {
         logger.info("Start query to get movie by id");
-        List<Movie> result = jdbcTemplate.query(getMovieById, new Object[]{id}, new MovieResultSetExtractor());
+        //TODO: use query for object!
+        List<Movie> result = jdbcTemplate.query(queryMap.get("getMovieById"), new Object[]{id}, new MovieResultSetExtractor());
         return !result.isEmpty() ? result.get(0) : null;
     }
 
@@ -86,7 +69,7 @@ public class MovieDaoImpl implements MovieDao {
             jdbcTemplate.update(new PreparedStatementCreator() {
                 @Override
                 public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                    PreparedStatement ps = connection.prepareStatement(addMovie, Statement.RETURN_GENERATED_KEYS);
+                    PreparedStatement ps = connection.prepareStatement(queryMap.get("addMovie"), Statement.RETURN_GENERATED_KEYS);
                     ps.setString(1, movie.getName());
                     ps.setString(2, movie.getPicturePath());
                     ps.setInt(3, movie.getYearOfRelease());
@@ -110,7 +93,7 @@ public class MovieDaoImpl implements MovieDao {
     private void updateMovieHasGenre(int movieId, Set<Genre> genres) {
         List<Genre> genreList = new ArrayList<>();
         genreList.addAll(genres);
-        jdbcTemplate.batchUpdate(addToMovieHasGenre, new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(queryMap.get("addToMovieHasGenre"), new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 Genre genre = genreList.get(i);
@@ -128,7 +111,7 @@ public class MovieDaoImpl implements MovieDao {
     private void updateMovieHasCountry(int movieId, Set<Country> countries) {
         List<Country> countryList = new ArrayList<>();
         countryList.addAll(countries);
-        jdbcTemplate.batchUpdate(addToMovieHasCountry, new BatchPreparedStatementSetter() {
+        jdbcTemplate.batchUpdate(queryMap.get("addToMovieHasCountry"), new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 Country country = countryList.get(i);
@@ -143,27 +126,36 @@ public class MovieDaoImpl implements MovieDao {
         });
     }
 
-    //TODO: SQL queries to configuration
     @Override
     public void editMovie(int id, Movie movie) {
         logger.info("Start query to edit movie id={}", id);
-        jdbcTemplate.update("DELETE FROM movie_has_genre WHERE movie_id = ?", id);
+        jdbcTemplate.update(queryMap.get("cleanUpMovieHasGenreWhenEditMovie"), id);
         updateMovieHasGenre(id, movie.getGenres());
-        jdbcTemplate.update("DELETE FROM movie_has_country WHERE movie_id = ?", id);
+        jdbcTemplate.update(queryMap.get("cleanUpMovieHasCountryWhenEditMovie"), id);
         updateMovieHasCountry(id, movie.getCountries());
-        jdbcTemplate.update(editMovie, new Object[]{movie.getName(), movie.getPicturePath(), movie.getYearOfRelease(), movie.getDescription(),
+        jdbcTemplate.update(queryMap.get("editMovie"), new Object[]{movie.getName(), movie.getPicturePath(), movie.getYearOfRelease(), movie.getDescription(),
                 movie.getRating(), movie.getPrice(), id});
     }
 
 
     @Override
     public void rateMovie(int movieId, double rating, int userId) {
-        logger.info("Start query to rate movie id={}", movieId);
-        jdbcTemplate.update("UPDATE rate SET rating = ? WHERE movie_id = ? AND user_id = ?", rating, movieId, userId);
-        //TODO : update average rating
+        logger.info("Start query to rate movie id={}, rate={}, userId={}", movieId, rating, userId);
+        int count = jdbcTemplate.queryForObject(queryMap.get("isRatedByCurrentUser"), new Object[]{movieId, userId}, Integer.class);
 
-        jdbcTemplate.update("update movie set rating = (select sum(rating)/count(rating) from `mydb`.`rate`) where id=?",movieId);
+        if (count == 0) {
+            jdbcTemplate.update(queryMap.get("addRate"), rating, userId, movieId);
+        } else {
+            jdbcTemplate.update(queryMap.get("updateOwnRate"), rating, movieId, userId);
+        }
+        jdbcTemplate.update(queryMap.get("updateTotalRate"), movieId);
     }
 
+    @Override
+    public Double getOwnRatingForMovie(int id, int userId) {
+        logger.info("Start query to get movie rating id={}", id, userId);
+        return jdbcTemplate.queryForObject(queryMap.get("getOwnRatingForMovie"),
+                new Object[]{id, userId}, Double.class);
+    }
 
 }

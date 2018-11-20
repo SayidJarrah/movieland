@@ -19,4 +19,6 @@ public interface MovieDao {
     void editMovie(int id, Movie movie);
 
     void rateMovie(int id, double rating, int userId);
+
+    Double getOwnRatingForMovie(int id, int userId);
 }

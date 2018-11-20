@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -18,11 +20,11 @@ public class GenreDaoImpl implements GenreDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private String getAllGenres;
+    @Resource(name = "queryMap")
+    private HashMap<String, String> queryMap;
 
     public List<Genre> getAllGenres() {
         logger.info("Start query to get all genres from DB");
-        return jdbcTemplate.query(getAllGenres, new GenreRowMapper());
+        return jdbcTemplate.query(queryMap.get("getAllGenres"), new GenreRowMapper());
     }
 }

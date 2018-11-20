@@ -10,6 +10,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
+import java.util.HashMap;
+
 @Repository
 public class UserDaoImpl implements UserDao {
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -17,15 +20,15 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    private String getUserByEmail;
+    @Resource(name = "queryMap")
+    private HashMap<String, String> queryMap;
 
     @Override
     public User getUserByEmail(String email) {
         logger.info("Start query to get user by email: " + email);
         User user;
         try {
-            user = jdbcTemplate.queryForObject(getUserByEmail, new Object[]{email}, new UserRowMapper());
+            user = jdbcTemplate.queryForObject(queryMap.get("getUserByEmail"), new Object[]{email}, new UserRowMapper());
         } catch (EmptyResultDataAccessException e) {
             logger.error("Can't find user with such email");
             return null;
