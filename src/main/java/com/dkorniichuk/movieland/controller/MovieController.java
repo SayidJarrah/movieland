@@ -1,6 +1,7 @@
 package com.dkorniichuk.movieland.controller;
 
 
+import com.dkorniichuk.movieland.dao.util.Page;
 import com.dkorniichuk.movieland.entity.Movie;
 import com.dkorniichuk.movieland.service.MovieService;
 import org.slf4j.Logger;
@@ -94,6 +95,14 @@ public class MovieController {
                                        @RequestHeader String uuid) throws IOException {
         logger.info("Sending request to get own rating for movie id={}", id);
         return movieService.getOwnRatingForMovie(id, UUID.fromString(uuid));
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    @ResponseBody
+    public Page<Movie> search(@RequestParam String title,
+                              @RequestParam(required = false) Integer page) {
+        logger.info("Sending request search movie by title ={}", title, page);
+        return movieService.search(title, page);
     }
 
 }

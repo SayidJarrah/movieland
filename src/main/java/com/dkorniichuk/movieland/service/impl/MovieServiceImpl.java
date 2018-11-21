@@ -2,6 +2,7 @@ package com.dkorniichuk.movieland.service.impl;
 
 import com.dkorniichuk.movieland.dao.MovieDao;
 import com.dkorniichuk.movieland.dao.UserDao;
+import com.dkorniichuk.movieland.dao.util.Page;
 import com.dkorniichuk.movieland.entity.Movie;
 import com.dkorniichuk.movieland.entity.User;
 import com.dkorniichuk.movieland.service.MovieService;
@@ -103,6 +104,12 @@ public class MovieServiceImpl implements MovieService {
         User user = userDao.getUserByEmail(userKey);
 
         return movieDao.getOwnRatingForMovie(id, user.getId());
+    }
+
+    @Override
+    public Page<Movie> search(String title, Integer page) {
+        logger.info("Search service started..");
+        return movieDao.search(title,page);
     }
 
 

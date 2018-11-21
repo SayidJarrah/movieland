@@ -1,5 +1,6 @@
 package com.dkorniichuk.movieland.service;
 
+import com.dkorniichuk.movieland.dao.util.Page;
 import com.dkorniichuk.movieland.entity.Movie;
 
 import java.io.IOException;
@@ -25,5 +26,7 @@ public interface MovieService {
     void rateMovie(int id, String rateData, UUID uuid) throws IOException;
 
     Double getOwnRatingForMovie(int id, UUID uuid) throws IOException;
+
+    Page<Movie> search(String title, Integer page);
 
 }

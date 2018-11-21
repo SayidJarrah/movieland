@@ -72,6 +72,17 @@
         <entry key="cleanUpMovieHasGenreWhenEditMovie" value="DELETE FROM movie_has_genre WHERE movie_id = ?"/>
         <entry key="cleanUpMovieHasCountryWhenEditMovie" value="DELETE FROM movie_has_country WHERE movie_id = ?"/>
         <entry key="getOwnRatingForMovie" value="SELECT rating FROM rate WHERE movie_id =? AND user_id = ?"/>
+        <entry key="search" value="SELECT m.id, m.name, m.year, m.description, m.rating, m.price,
+                                       m.picturePath, g.id genre_id, g.name genre, c.name country,
+                                       c.id country_id
+                                FROM   movie m, movie_has_genre mhg, genre g,
+                                       movie_has_country mhc, country c
+                                WHERE  m.id=mhg.movie_id
+                                AND    mhg.genre_id=g.id
+                                AND    m.id=mhc.movie_id
+                                AND    mhc.country_id=c.id
+                                AND    m.name LIKE ?"/>
+        <entry key="searchMovieCount" value="SELECT COUNT(*) FROM movie WHERE name LIKE ?"/>
     </util:map>
 
 

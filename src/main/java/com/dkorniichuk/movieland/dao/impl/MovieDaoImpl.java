@@ -2,6 +2,8 @@ package com.dkorniichuk.movieland.dao.impl;
 
 import com.dkorniichuk.movieland.dao.MovieDao;
 import com.dkorniichuk.movieland.dao.mapper.MovieResultSetExtractor;
+import com.dkorniichuk.movieland.dao.util.Page;
+import com.dkorniichuk.movieland.dao.util.PaginationHelper;
 import com.dkorniichuk.movieland.entity.Country;
 import com.dkorniichuk.movieland.entity.Genre;
 import com.dkorniichuk.movieland.entity.Movie;
@@ -156,6 +158,15 @@ public class MovieDaoImpl implements MovieDao {
         logger.info("Start query to get movie rating id={}", id, userId);
         return jdbcTemplate.queryForObject(queryMap.get("getOwnRatingForMovie"),
                 new Object[]{id, userId}, Double.class);
+    }
+
+    @Override
+    public Page<Movie> search(String title, Integer pageId) {
+        logger.info("Start query to search movie by title ={}", title);
+        PaginationHelper<Movie> paginationHelper = new PaginationHelper<Movie>();
+
+        return paginationHelper.getPage(jdbcTemplate, queryMap.get("searchMovieCount"), queryMap.get("search"),
+                new Object[]{"%" + title + "%"}, pageId, new MovieResultSetExtractor());
     }
 
 }
