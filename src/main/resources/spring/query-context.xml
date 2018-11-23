@@ -83,6 +83,8 @@
                                 AND    mhc.country_id=c.id
                                 AND    m.name LIKE ?"/>
         <entry key="searchMovieCount" value="SELECT COUNT(*) FROM movie WHERE name LIKE ?"/>
+        <entry key="markForRemoving" value="UPDATE movie SET marked_for_removing = 1 where id = ?"/>
+        <entry key="uncheckRemoving" value="UPDATE movie SET marked_for_removing = NULL where id = ?"/>
     </util:map>
 
 

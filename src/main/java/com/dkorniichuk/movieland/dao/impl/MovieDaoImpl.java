@@ -169,4 +169,17 @@ public class MovieDaoImpl implements MovieDao {
                 new Object[]{"%" + title + "%"}, pageId, new MovieResultSetExtractor());
     }
 
+    @Override
+    public void markForRemoving(int id) {
+        logger.info("Start query to mark movie={} for removing", id);
+        jdbcTemplate.update(queryMap.get("markForRemoving"),id);
+
+    }
+
+    @Override
+    public void uncheckRemoving(int id) {
+        logger.info("Start query to uncheck movie={} for removing", id);
+        jdbcTemplate.update(queryMap.get("uncheckRemoving"),id);
+    }
+
 }

@@ -4,7 +4,6 @@ import com.dkorniichuk.movieland.dao.util.Page;
 import com.dkorniichuk.movieland.entity.Movie;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,5 +27,9 @@ public interface MovieService {
     Double getOwnRatingForMovie(int id, UUID uuid) throws IOException;
 
     Page<Movie> search(String title, Integer page);
+
+    void markForRemoving(int id);
+
+    void uncheckRemoving(int id);
 
 }

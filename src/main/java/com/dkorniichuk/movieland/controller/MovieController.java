@@ -105,4 +105,22 @@ public class MovieController {
         return movieService.search(title, page);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<HttpStatus> markForRemoving(@PathVariable int id) {
+        logger.info("Mark movie id={} for removing", id);
+        movieService.markForRemoving(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{id}/unmark", method = RequestMethod.POST)
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<HttpStatus> uncheckRemoving(@PathVariable int id) {
+        logger.info("Uncheck movie id={} from removing", id);
+        movieService.uncheckRemoving(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

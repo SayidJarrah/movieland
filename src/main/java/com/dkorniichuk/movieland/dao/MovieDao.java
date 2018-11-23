@@ -24,4 +24,8 @@ public interface MovieDao {
     Double getOwnRatingForMovie(int id, int userId);
 
     Page<Movie> search(String title, Integer page);
+
+    void markForRemoving(int id);
+
+    void uncheckRemoving(int id);
 }

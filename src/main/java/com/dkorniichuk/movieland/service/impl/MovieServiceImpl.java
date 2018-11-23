@@ -99,7 +99,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Double getOwnRatingForMovie(int id, UUID uuid) throws IOException {
         logger.info("Get own movie rating service started...");
-      //TODO: to helper class (used also for review)
+        //TODO: to helper class (used also for review)
         String userKey = cache.getUserKeyByUUID(uuid);
         User user = userDao.getUserByEmail(userKey);
 
@@ -109,7 +109,20 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Page<Movie> search(String title, Integer page) {
         logger.info("Search service started..");
-        return movieDao.search(title,page);
+        return movieDao.search(title, page);
+    }
+
+    @Override
+    public void markForRemoving(int id) {
+        logger.info("Mark movie for removing service started...");
+        movieDao.markForRemoving(id);
+
+    }
+
+    @Override
+    public void uncheckRemoving(int id) {
+        logger.info("Uncheck movie from removing service started...");
+        movieDao.uncheckRemoving(id);
     }
 
 
