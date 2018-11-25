@@ -6,4 +6,6 @@ import java.util.UUID;
 public interface ReviewService {
 
     void addReview(String reviewStr, UUID uuid) throws IOException;
+
+    void removeReview(int id, UUID uuid);
 }

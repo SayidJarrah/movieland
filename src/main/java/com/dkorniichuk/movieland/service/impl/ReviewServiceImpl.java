@@ -4,6 +4,7 @@ import com.dkorniichuk.movieland.dao.ReviewDao;
 import com.dkorniichuk.movieland.dao.UserDao;
 import com.dkorniichuk.movieland.entity.Review;
 import com.dkorniichuk.movieland.entity.User;
+import com.dkorniichuk.movieland.entity.UserRole;
 import com.dkorniichuk.movieland.service.ReviewService;
 import com.dkorniichuk.movieland.service.util.AuthenticationTokenCache;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,5 +34,20 @@ public class ReviewServiceImpl implements ReviewService {
         reviewDao.addReview(review);
         System.out.println(user);
 
+    }
+
+    @Override
+    public void removeReview(int id, UUID uuid) {
+
+        String userKey = cache.getUserKeyByUUID(uuid);
+        User user = userDao.getUserByEmail(userKey);
+        if (UserRole.ROLE_ADMIN.getValue() == user.getUserTypeId()) {
+            reviewDao.removeReview(id);
+        } else {
+            Review review = reviewDao.getReview(id);
+            if (review.getUser().getId() == user.getId()) {
+                reviewDao.removeReview(id);
+            }
+        }
     }
 }

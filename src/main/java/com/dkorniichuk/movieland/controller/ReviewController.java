@@ -19,7 +19,8 @@ public class ReviewController {
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private ReviewService reviewService;
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "/v1/review", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<HttpStatus> addReview(
@@ -28,6 +29,14 @@ public class ReviewController {
         logger.info("Sending request to add movie review");
         reviewService.addReview(review, UUID.fromString(uuid));
         return new ResponseEntity<>(HttpStatus.OK);
+    }
 
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/v1/review/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity<HttpStatus> removeReview(@PathVariable int id,
+                                                   @RequestHeader String uuid) {
+        reviewService.removeReview(id, UUID.fromString(uuid));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
