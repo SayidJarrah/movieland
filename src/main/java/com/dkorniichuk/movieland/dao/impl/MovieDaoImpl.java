@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -172,14 +174,36 @@ public class MovieDaoImpl implements MovieDao {
     @Override
     public void markForRemoving(int id) {
         logger.info("Start query to mark movie={} for removing", id);
-        jdbcTemplate.update(queryMap.get("markForRemoving"),id);
+        jdbcTemplate.update(queryMap.get("markForRemoving"), id);
 
     }
 
     @Override
     public void uncheckRemoving(int id) {
         logger.info("Start query to uncheck movie={} for removing", id);
-        jdbcTemplate.update(queryMap.get("uncheckRemoving"),id);
+        jdbcTemplate.update(queryMap.get("uncheckRemoving"), id);
+    }
+
+    @Override
+    public void deleteMarkedMovie() {
+        logger.info("Start query to delete marked movie (triggered by auto task)");
+        List<Integer> ids = jdbcTemplate.queryForList(queryMap.get("selectMarkedMovies"), Integer.class);
+        logger.info("Movie ids for removing = {}", ids);
+        if (!ids.isEmpty()) {
+            deleteMoviesFromRelatedTables(ids);
+        }
+        jdbcTemplate.update(queryMap.get("deleteMarkedMovie"));
+    }
+
+    private void deleteMoviesFromRelatedTables(List<Integer> ids) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", ids);
+        NamedParameterJdbcTemplate namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate.getDataSource());
+        namedJdbcTemplate.update(queryMap.get("deleteMarkedMoviesFromMovieHasGenre"), parameters);
+        namedJdbcTemplate.update(queryMap.get("deleteMarkedMoviesFromMovieHasCountry"), parameters);
+        namedJdbcTemplate.update(queryMap.get("deleteMarkedMoviesFromRates"), parameters);
+        namedJdbcTemplate.update(queryMap.get("deleteMarkedMoviesFromReview"), parameters);
+
     }
 
 }

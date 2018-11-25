@@ -28,4 +28,6 @@ public interface MovieDao {
     void markForRemoving(int id);
 
     void uncheckRemoving(int id);
+
+    void deleteMarkedMovie();
 }

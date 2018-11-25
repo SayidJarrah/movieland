@@ -85,6 +85,13 @@
         <entry key="searchMovieCount" value="SELECT COUNT(*) FROM movie WHERE name LIKE ?"/>
         <entry key="markForRemoving" value="UPDATE movie SET marked_for_removing = 1 where id = ?"/>
         <entry key="uncheckRemoving" value="UPDATE movie SET marked_for_removing = NULL where id = ?"/>
+        <entry key="deleteMarkedMovie" value="DELETE FROM movie WHERE marked_for_removing=1"/>
+        <entry key="selectMarkedMovies" value="SELECT id FROM movie WHERE marked_for_removing=1"/>
+        <entry key="deleteMarkedMoviesFromMovieHasGenre" value="DELETE FROM movie_has_genre WHERE movie_id IN (:ids)"/>
+        <entry key="deleteMarkedMoviesFromMovieHasCountry" value="DELETE FROM movie_has_country WHERE movie_id IN (:ids)"/>
+        <entry key="deleteMarkedMoviesFromRates" value="DELETE FROM rate WHERE movie_id IN (:ids)"/>
+        <entry key="deleteMarkedMoviesFromReview" value="DELETE FROM review WHERE movie_id IN (:ids)"/>
+
     </util:map>
 
 
