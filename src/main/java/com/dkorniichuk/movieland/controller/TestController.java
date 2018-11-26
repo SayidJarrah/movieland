@@ -1,4 +1,4 @@
-/*package com.dkorniichuk.movieland.controller;
+package com.dkorniichuk.movieland.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,10 +10,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class TestController {
 
     @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView getAllMovies() {
-        ModelAndView model = new ModelAndView("index");
-        return model;
+    public String home() {
+      return "index";
     }
 
 
-}*/
+}
