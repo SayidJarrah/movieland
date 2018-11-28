@@ -15,12 +15,7 @@
 
     <mvc:annotation-driven/>
     <security:global-method-security pre-post-annotations="enabled"/>
-
-
-       <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-
-           <property name="suffix" value=".html"/>
-    </bean>
+    <mvc:default-servlet-handler />
 
 
     <mvc:interceptors>
