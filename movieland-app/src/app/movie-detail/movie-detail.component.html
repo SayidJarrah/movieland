@@ -1,13 +1,17 @@
 <p>
   <mat-card>
-    <mat-card-header>Movie details</mat-card-header>
+    <mat-card-title>{{movie.name}}</mat-card-title>
     <mat-card-content>
-     {{movie.id}}
-     {{movie.name}}
-     {{movie.yearOfRelease}}
-     {{movie.description}}
-     {{movie.rating}}
-     {{movie.price}}
+
+      <mat-list>
+        <mat-list-item>{{movie.yearOfRelease}}</mat-list-item>
+        <mat-divider [vertical]="true"></mat-divider>
+        <mat-list-item>{{movie.rating}}</mat-list-item>
+        <mat-divider [vertical]="true"></mat-divider>
+        <mat-list-item> {{movie.price}}</mat-list-item>
+        <mat-divider></mat-divider>
+        <mat-list-item>{{movie.description}}</mat-list-item>
+      </mat-list>
     </mat-card-content>
   </mat-card>
 </p>

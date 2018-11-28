@@ -18,8 +18,10 @@ import {
 import {RouterModule, Routes} from "@angular/router";
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import {FormsModule} from "@angular/forms";
+import {MatDividerModule} from "@angular/material/divider";
 
 const appRoutes: Routes = [
+  {path: '', component:MovieListComponent},
   {path: 'movie-list', component: MovieListComponent},
   {path: 'movie-detail/:id', component: MovieDetailComponent}
 
@@ -42,6 +44,7 @@ const appRoutes: Routes = [
     MatListModule,
     MatGridListModule,
     MatToolbarModule,
+    MatDividerModule,
     FormsModule,
     RouterModule.forRoot(appRoutes)
 
