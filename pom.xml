@@ -150,7 +150,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>install</arguments>
+                            <arguments>install --save @angular/material @angular/cdk</arguments>
                         </configuration>
                     </execution>
 
@@ -167,7 +167,7 @@
                 </executions>
             </plugin>
 
-            <!-- Plugin to copy the content of /angular/dist/ directory to output directory (ie/ /target/transactionManager-1.0/) -->
+            <!-- Plugin to copy the content of /angular/dist/ directory to output directory -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
