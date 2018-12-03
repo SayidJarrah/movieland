@@ -1,0 +1,17 @@
+<mat-card class="demo-panel">
+  <mat-card-content>
+    <mat-sidenav-container class="example-container">
+      <mat-sidenav  opened="true" #sidenav class="example-sidenav"  mode="side">
+        <app-genre-list></app-genre-list>
+      </mat-sidenav>
+      <mat-sidenav-content>
+       <router-outlet></router-outlet>
+    <!--  <div class="example-sidenav-content">
+        <button type="button" md-button (click)="sidenav.open()">
+          Open Sidenav
+        </button>
+      </div> -->
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </mat-card-content>
+</mat-card>

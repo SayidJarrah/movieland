@@ -1,14 +1,12 @@
 <mat-card>
-  <mat-card-header>Movies</mat-card-header>
   <mat-card-content>
-    <mat-grid-list cols="3" rowHeight="50px">
-      <mat-grid-tile *ngFor="let movie of movies">
+    <mat-list>
+      <mat-list-item *ngFor="let movie of movies">
         <!--<img mat-list-avatar src="{{movie.picturePath}}" alt="{{movie.id}}">-->
         <h3 mat-line>
           <a mat-button [routerLink]="['/movie-detail',movie.id]">{{movie.name}}</a>
         </h3>
-      </mat-grid-tile>
-    </mat-grid-list>
+      </mat-list-item>
+    </mat-list>
   </mat-card-content>
 </mat-card>
-

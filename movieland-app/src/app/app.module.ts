@@ -13,16 +13,21 @@ import {
   MatGridListModule,
   MatInputModule,
   MatListModule,
+  MatSidenavModule,
   MatToolbarModule
 } from '@angular/material';
 import {RouterModule, Routes} from "@angular/router";
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import {FormsModule} from "@angular/forms";
 import {MatDividerModule} from "@angular/material/divider";
+import { GenreListComponent } from './genre-list/genre-list.component';
+import {GenreService} from "./genre.service";
+import { GenreMenuComponent } from './genre-menu/genre-menu.component';
 
 const appRoutes: Routes = [
   {path: '', component:MovieListComponent},
   {path: 'movie-list', component: MovieListComponent},
+  {path: 'genre-list', component: GenreListComponent},
   {path: 'movie-detail/:id', component: MovieDetailComponent}
 
 ]
@@ -31,7 +36,9 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     MovieListComponent,
-    MovieDetailComponent
+    MovieDetailComponent,
+    GenreListComponent,
+    GenreMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -46,10 +53,11 @@ const appRoutes: Routes = [
     MatToolbarModule,
     MatDividerModule,
     FormsModule,
+    MatSidenavModule,
     RouterModule.forRoot(appRoutes)
 
   ],
-  providers: [MovieService],
+  providers: [MovieService,GenreService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
